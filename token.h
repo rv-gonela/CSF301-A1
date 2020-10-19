@@ -1,3 +1,8 @@
+#include <string.h>
+
+#ifndef TOKEN_H
+#define TOKEN_H
+
 enum Token {
     PROGRAM,
     PAR,
@@ -8,7 +13,7 @@ enum Token {
     SEMICOLON,
     INTEGER,
     REAL,
-    COOL,
+    BOOL,
     LIST,
     OF,
     VARIABLES,
@@ -26,3 +31,7 @@ enum Token {
     OR,
     STRING
 };
+
+enum Token lexemeType(char* lexeme);
+
+#endif
