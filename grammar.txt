@@ -1,33 +1,54 @@
-
 <program> PROGRAM PAR CURLY_OPEN <statement_list> CURLY_CLOSE
 <statement_list> <declaration_list> <assignment_list>
-<declaration_list> <declaration> <declaration_list> | <declaration>
+<declaration_list> <declaration> <declaration_list>
+<declaration_list> <declaration>
 <declaration> DECLARE <var_declaration> COLON <data_type>
-<var_declaration> <var_list> | <var>
+<var_declaration> <var_list>
+<var_declaration> <var>
 <var_list> LIST OF VARIABLES <var_id_list>
-<var_id_list> <var_id> <var_id_list> | <var_id>
+<var_id_list> <var_id> <var_id_list>
+<var_id_list> <var_id>
 <var_id> STRING
-<data_type> <primitive> SEMICOLON | <array_type>
-<primitive> INTEGER | REAL | BOOL
-<array_type> <rect_array> | <jagged_array>
+<data_type> <primitive> SEMICOLON
+<data_type> <array_type>
+<primitive> INTEGER
+<primitive> REAL
+<primitive> BOOL
+<array_type> <rect_array>
+<array_type> <jagged_array>
 <rect_array> ARRAY <rect_dimension_list> OF INTEGER SEMICOLON
-<rect_dimension_list> <dimension> <rect_dimension_list> | <dimension>
+<rect_dimension_list> <dimension> <rect_dimension_list>
+<rect_dimension_list> <dimension>
 <dimension> RECT_OPEN <index> DOUBLE_PERIOD <index> RECT_CLOSE
-<index> <integer> | <var_id>
+<index> <integer>
+<index> <var_id>
 <jagged_array> JAGGED ARRAY <jagged_dimension_list> OF INTEGER SEMICOLON <jagged_assign_list>
 <jagged_dimension_list> <dimension> <jagged_dimension>
 <jagged_dimension> RECT_OPEN RECT_CLOSE | RECT_OPEN RECT_CLOSE RECT_OPEN RECT_CLOSE
 <access_index> RECT_OPEN <integer> RECT_CLOSE
 <jagged_assign_list> R1 <access_index> COLON SIZE <integer> COLON VALUES CURLY_OPEN <list_integer_list> CURLY_CLOSE
-<list_integer_list> <integer_list> SEMICOLON <list_integer_list> | <integer_list>
-<integer_list> <integer> <integer_list> | <integer>
-<assignment_list> <assignment> <assignment_list> | <assignment>
+<list_integer_list> <integer_list> SEMICOLON <list_integer_list>
+<list_integer_list> <integer_list>
+<integer_list> <integer> <integer_list>
+<integer_list> <integer>
+<assignment_list> <assignment> <assignment_list>
+<assignment_list> <assignment>
 <assignment> <assign_var> EQUAL_SIGN <expression> SEMICOLON
-<expression> <expression> <low_prec> <term> | <term>
-<term> <term> <high_prec> <operand> | <operand>
-<assign_var> <var_id> | <arr_id>
-<operand> <var_id> | <arr_id> | <primitive>
+<expression> <expression> <low_prec> <term>
+<expression> <term>
+<term> <term> <high_prec> <operand>
+<term> <operand>
+<assign_var> <var_id>
+<assign_var> <arr_id>
+<operand> <var_id>
+<operand> <arr_id>
+<operand> <primitive>
 <arr_id> <var_id> RECT_OPEN <index_list> RECT_CLOSE
-<index_list> <index> <index_list> | <index>
-<low_prec> PLUS | MINUS | OR
-<high_prec> MULTIPLY | DIVIDE | AND
+<index_list> <index> <index_list>
+<index_list> <index>
+<low_prec> PLUS
+<low_prec> MINUS
+<low_prec> OR
+<high_prec> MULTIPLY
+<high_prec> DIVIDE
+<high_prec> AND
