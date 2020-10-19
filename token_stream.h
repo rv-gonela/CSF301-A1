@@ -26,11 +26,21 @@ struct TokenStreamNode {
   TokenStreamNode* next;
 };
 
+/* 
+ * Struct defining the token stream
+ *
+ * head : A pointer to the first element of the token stream
+ */
 typedef struct {
   TokenStreamNode* head;
 } TokenStream;
 
-
+/*
+ * Reads the source code from a file and populates the token stream
+ *
+ * file_name : The name of the source code file
+ * s : The token stream to populate
+ */
 void tokenizeSourceCode(char* file_name, TokenStream* s);
 
 #endif

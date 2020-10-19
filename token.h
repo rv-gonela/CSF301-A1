@@ -3,6 +3,9 @@
 #ifndef TOKEN_H
 #define TOKEN_H
 
+/*
+ * Enum defining all the terminals (token classes)
+ */
 enum Token {
     PROGRAM,
     PAR,
@@ -32,6 +35,11 @@ enum Token {
     STRING
 };
 
+/*
+ * Categorizes a given lexeme into its token class.
+ *
+ * lexeme : The given lexeme
+ */
 enum Token lexemeType(char* lexeme);
 
 #endif
