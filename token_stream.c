@@ -6,7 +6,9 @@ void tokenizeSourceCode(char* file_name, TokenStream* s)
   char line_buffer[100]; // Buffer for reading lines
   char lexeme_buffer[100]; // Buffer for reading lexemes
   size_t lexeme_buffer_size = 0; // Lexeme buffer size
+  s->head = (TokenStreamNode*) malloc(sizeof(TokenStreamNode));
   TokenStreamNode* head = s->head; // Current head of the linked list being built
+  TokenStreamNode* prev = NULL;
   size_t line_number = 1; 
 
   if (fptr==NULL)
@@ -25,13 +27,18 @@ void tokenizeSourceCode(char* file_name, TokenStream* s)
       {
         if (lexeme_buffer_size != 0)
         {
-          head = (TokenStreamNode*) malloc(sizeof(TokenStreamNode));
+          // Populate newest node.
           head->lexeme = (char*)malloc((lexeme_buffer_size+1)*sizeof(char));
           memcpy(head->lexeme,lexeme_buffer,lexeme_buffer_size);
           head->lexeme[lexeme_buffer_size] = '\0';
           head->lexeme_size = lexeme_buffer_size;
           head->line_number = line_number;
           head->token_type = lexemeType(head->lexeme);
+
+          // Create next node.
+          lexeme_buffer_size = 0;
+          head->next =(TokenStreamNode*) malloc(sizeof(TokenStreamNode));
+          prev = head;
           head = head->next;
         }
         if (line_buffer[i]=='\n')
@@ -45,6 +52,11 @@ void tokenizeSourceCode(char* file_name, TokenStream* s)
         lexeme_buffer[lexeme_buffer_size++] = line_buffer[i];
       }
     }
+  }
+  if (prev != NULL)
+  {
+    prev->next = NULL;
+    free(head);
   }
 }
 
