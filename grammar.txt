@@ -24,7 +24,8 @@
 <index> <var_id>
 <jagged_array> JAGGED ARRAY <jagged_dimension_list> OF INTEGER SEMICOLON <jagged_assign_list>
 <jagged_dimension_list> <dimension> <jagged_dimension>
-<jagged_dimension> RECT_OPEN RECT_CLOSE | RECT_OPEN RECT_CLOSE RECT_OPEN RECT_CLOSE
+<jagged_dimension> RECT_OPEN RECT_CLOSE
+<jagged_dimension> RECT_OPEN RECT_CLOSE RECT_OPEN RECT_CLOSE
 <access_index> RECT_OPEN <integer> RECT_CLOSE
 <jagged_assign_list> R1 <access_index> COLON SIZE <integer> COLON VALUES CURLY_OPEN <list_integer_list> CURLY_CLOSE
 <list_integer_list> <integer_list> SEMICOLON <list_integer_list>
