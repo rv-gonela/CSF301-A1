@@ -3,7 +3,7 @@
 #include <string.h>
 #include "grammar.h"
 
-void readGrammar(char* file_name, Grammar G[])
+void readGrammar(char* file_name, Grammar* G)
 {
   FILE *fptr = fopen(file_name,"r"); // File stream
   char line_buffer[100]; // Buffer for reading lines
@@ -19,6 +19,6 @@ void readGrammar(char* file_name, Grammar G[])
   // Read entire file.
   while(fgets(line_buffer,sizeof(line_buffer), fptr) != NULL)
   {
-    
+
   }
 }

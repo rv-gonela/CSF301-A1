@@ -9,15 +9,15 @@ typedef struct SymbolNode SymbolNode;
 
 struct SymbolNode {
   char* symbol;
-  boolean is_terminal;
+  size_t symbol_size;
+  int is_terminal;
   SymbolNode* next;
 };
 
 typedef struct {
-  char* lhs;
-  SymbolNode* head;
+  SymbolNode** lhs;
 } Grammar;
 
-void readGrammar(char* file_name, Grammar G[]);
+void readGrammar(char* file_name, Grammar* G);
 
 #endif
