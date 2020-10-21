@@ -43,8 +43,6 @@
 <operand> <arr_id>
 <operand> VAR_ID
 <operand> INTEGER_LITERAL
-<operand> REAL_LITERAL
-<operand> BOOL_LITERAL
 <arr_id> VAR_ID RECT_OPEN <index_list> RECT_CLOSE
 <index_list> <index> <index_list>
 <index_list> <index>
