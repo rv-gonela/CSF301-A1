@@ -6,6 +6,7 @@
 #define GRAMMAR_H
 
 typedef struct SymbolNode SymbolNode;
+typedef struct Grammar Grammar;
 
 struct SymbolNode {
   char* symbol;
@@ -14,10 +15,10 @@ struct SymbolNode {
   SymbolNode* next;
 };
 
-typedef struct {
+typedef struct Grammar{
   SymbolNode** grammar_lhs;
   int rule_count;
-} Grammar;
+};
 
 void readGrammar(char* file_name, Grammar* G);
 
