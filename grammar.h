@@ -15,7 +15,8 @@ struct SymbolNode {
 };
 
 typedef struct {
-  SymbolNode** lhs;
+  SymbolNode** grammar_lhs;
+  int rule_count;
 } Grammar;
 
 void readGrammar(char* file_name, Grammar* G);
