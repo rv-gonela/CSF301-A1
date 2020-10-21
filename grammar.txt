@@ -6,9 +6,8 @@
 <var_declaration> <var_list>
 <var_declaration> <var>
 <var_list> LIST OF VARIABLES <var_id_list>
-<var_id_list> <var_id> <var_id_list>
-<var_id_list> <var_id>
-<var_id> STRING
+<var_id_list> VAR_ID <var_id_list>
+<var_id_list> VAR_ID
 <data_type> <primitive> SEMICOLON
 <data_type> <array_type>
 <primitive> INTEGER
@@ -20,31 +19,33 @@
 <rect_dimension_list> <dimension> <rect_dimension_list>
 <rect_dimension_list> <dimension>
 <dimension> RECT_OPEN <index> DOUBLE_PERIOD <index> RECT_CLOSE
-<index> <integer>
-<index> <var_id>
+<index> INTEGER_LITERAL
+<index> VAR_ID
 <jagged_array> JAGGED ARRAY <jagged_dimension_list> OF INTEGER SEMICOLON <jagged_assign_list>
 <jagged_dimension_list> <dimension> <jagged_dimension>
 <jagged_dimension> RECT_OPEN RECT_CLOSE
 <jagged_dimension> RECT_OPEN RECT_CLOSE RECT_OPEN RECT_CLOSE
-<access_index> RECT_OPEN <integer> RECT_CLOSE
-<jagged_assign_list> R1 <access_index> COLON SIZE <integer> COLON VALUES CURLY_OPEN <list_integer_list> CURLY_CLOSE
+<access_index> RECT_OPEN INTEGER_LITERAL RECT_CLOSE
+<jagged_assign_list> R1 <access_index> COLON SIZE INTEGER_LITERAL COLON VALUES CURLY_OPEN <list_integer_list> CURLY_CLOSE
 <list_integer_list> <integer_list> SEMICOLON <list_integer_list>
 <list_integer_list> <integer_list>
-<integer_list> <integer> <integer_list>
-<integer_list> <integer>
+<integer_list> INTEGER_LITERAL <integer_list>
+<integer_list> INTEGER_LITERAL
 <assignment_list> <assignment> <assignment_list>
 <assignment_list> <assignment>
 <assignment> <assign_var> EQUAL_SIGN <expression> SEMICOLON
+<assign_var> <arr_id>
+<assign_var> VAR_ID
 <expression> <expression> <low_prec> <term>
 <expression> <term>
 <term> <term> <high_prec> <operand>
 <term> <operand>
-<assign_var> <var_id>
-<assign_var> <arr_id>
-<operand> <var_id>
 <operand> <arr_id>
-<operand> <primitive>
-<arr_id> <var_id> RECT_OPEN <index_list> RECT_CLOSE
+<operand> VAR_ID
+<operand> INTEGER_LITERAL
+<operand> REAL_LITERAL
+<operand> BOOL_LITERAL
+<arr_id> VAR_ID RECT_OPEN <index_list> RECT_CLOSE
 <index_list> <index> <index_list>
 <index_list> <index>
 <low_prec> PLUS
