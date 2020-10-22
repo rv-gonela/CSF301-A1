@@ -20,7 +20,6 @@ void tokenizeSourceCode(char* file_name, TokenStream* s)
   // Read entire file.
   while(fgets(line_buffer,sizeof(line_buffer), fptr) != NULL)
   {
-    printf("%s\n",line_buffer);
     for (size_t i = 0; i < 100; i++)
     {
       if (line_buffer[i]=='\n'|| line_buffer[i]==' ') // Line end

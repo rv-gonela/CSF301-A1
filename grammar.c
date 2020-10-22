@@ -7,28 +7,27 @@ void readGrammar(char* file_name, Grammar* G)
   char c;
   int count = 0;
 
-
   if (fptr==NULL)
   {
     printf("File failed to open");
     exit(0);
   }
-  //count number of lines
+
+  //Count number of lines
   for (c = getc(fptr); c != EOF; c = getc(fptr))
   {
     if (c == '\n') // Increment count if this character is newline
-    {
-      count = count + 1;
-    }
-  }  // Close the file
-  fclose(fptr);
+      count++;
+  }
+  fclose(fptr); // Close the file
+
   G->grammar_lhs= (SymbolNode**)malloc((sizeof(SymbolNode*)*count));
   G->rule_count=count;
+
   fptr = fopen(file_name,"r");
-  // Read entire file.
-  //SymbolNode* prod_head = *(G->grammar_lhs);
   SymbolNode* curr_symbol;
   int k=0;
+  // Read entire file
   while(fgets(line_buffer,sizeof(line_buffer), fptr) != NULL)
   {
     int lhs_flag=1;
