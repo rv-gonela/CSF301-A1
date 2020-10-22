@@ -32,7 +32,8 @@ enum Token {
     MULTIPLY,
     AND,
     OR,
-    STRING
+    STRING,
+    INTEGER_LITERAL
 };
 
 /*

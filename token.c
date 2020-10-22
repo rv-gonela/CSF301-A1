@@ -50,5 +50,12 @@ enum Token lexemeType(char* lexeme)
     return AND;
   if (strcmp(lexeme,"|||")==0)
     return OR;
-  return STRING; // If it is not any of these, it must be a variable name
+  
+  for (size_t i = 0; i < strlen(lexeme); i++)
+  {
+    if (lexeme[i] < '0' || lexeme[i] > '9')
+      return STRING;
+  }
+
+  return INTEGER_LITERAL; // If it is not any of these, it must be a variable name
 }
