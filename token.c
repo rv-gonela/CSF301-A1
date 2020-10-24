@@ -32,6 +32,8 @@ enum Token lexemeType(char* lexeme)
     return RECT_OPEN;
   if (strcmp(lexeme,"]")==0)
     return RECT_CLOSE;
+  if (strcmp(lexeme,"..")==0)
+    return DOUBLE_PERIOD;
   if (strcmp(lexeme,"jagged")==0)
     return JAGGED;
   if (strcmp(lexeme,"array")==0)
@@ -50,12 +52,16 @@ enum Token lexemeType(char* lexeme)
     return AND;
   if (strcmp(lexeme,"|||")==0)
     return OR;
+  if(strcmp(lexeme,"size")==0)
+    return SIZE;
+  if(strcmp(lexeme,"values")==0)
+    return VALUES;
   
   for (size_t i = 0; i < strlen(lexeme); i++)
   {
     if (lexeme[i] < '0' || lexeme[i] > '9')
-      return STRING;
+      return VAR_ID;
   }
 
-  return INTEGER_LITERAL; // If it is not any of these, it must be a variable name
+  return INTEGER_LITERAL; // If it is not any of these, it must be an integer literal
 }
