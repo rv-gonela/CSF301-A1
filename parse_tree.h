@@ -2,7 +2,10 @@
 #include <stdlib.h>
 #include "token.h"
 #include "token_stream.h"
-#include "type_expression_table.h"
+#include "type_expression.h"
+
+#ifndef PARSE_TREE_H
+#define PARSE_TREE_H
 
 typedef struct ParseTreeNode ParseTreeNode;
 
@@ -18,3 +21,4 @@ typedef struct{
   ParseTreeNode* root;
 } ParseTree;
 
+#endif
