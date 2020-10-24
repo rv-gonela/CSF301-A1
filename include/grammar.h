@@ -30,7 +30,7 @@ struct SymbolNode {
  */
 typedef struct {
   SymbolNode** grammar_lhs;
-  int rule_count;
+  size_t rule_count;
 } Grammar;
 
 /* 

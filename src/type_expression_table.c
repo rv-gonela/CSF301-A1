@@ -1,4 +1,4 @@
-#include "typeExpressionTable.h"
+#include "type_expression_table.h"
 
 void printTypeExpressionTable(typeExpressionTable T){
   for(int i=0;i<T.size;i++)

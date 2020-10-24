@@ -3,65 +3,65 @@
 enum Token lexemeType(char* lexeme)
 {
   if (strcmp(lexeme,"program")==0)
-    return PROGRAM;
+    return TOKEN_PROGRAM;
   if (strcmp(lexeme,"()")==0)
-    return PAR;
+    return TOKEN_PAR;
   if (strcmp(lexeme,"{")==0)
-    return CURLY_OPEN;
+    return TOKEN_CURLY_OPEN;
   if (strcmp(lexeme,"}")==0)
-    return CURLY_CLOSE;
+    return TOKEN_CURLY_CLOSE;
   if (strcmp(lexeme,"declare")==0)
-    return DECLARE;
+    return TOKEN_DECLARE;
   if (strcmp(lexeme,":")==0)
-    return COLON;
+    return TOKEN_COLON;
   if (strcmp(lexeme,";")==0)
-    return SEMICOLON;
+    return TOKEN_SEMICOLON;
   if (strcmp(lexeme,"integer")==0)
-    return INTEGER;
+    return TOKEN_INTEGER;
   if (strcmp(lexeme,"real")==0)
-    return REAL;
+    return TOKEN_REAL;
   if (strcmp(lexeme,"boolean")==0)
-    return BOOL;
+    return TOKEN_BOOL;
   if (strcmp(lexeme,"list")==0)
-    return LIST;
+    return TOKEN_LIST;
   if (strcmp(lexeme,"of")==0)
-    return OF;
+    return TOKEN_OF;
   if (strcmp(lexeme,"variables")==0)
-    return VARIABLES;
+    return TOKEN_VARIABLES;
   if (strcmp(lexeme,"[")==0)
-    return RECT_OPEN;
+    return TOKEN_RECT_OPEN;
   if (strcmp(lexeme,"]")==0)
-    return RECT_CLOSE;
+    return TOKEN_RECT_CLOSE;
   if (strcmp(lexeme,"..")==0)
-    return DOUBLE_PERIOD;
+    return TOKEN_DOUBLE_PERIOD;
   if (strcmp(lexeme,"jagged")==0)
-    return JAGGED;
+    return TOKEN_JAGGED;
   if (strcmp(lexeme,"array")==0)
-    return ARRAY;
+    return TOKEN_ARRAY;
   if (strcmp(lexeme,"=")==0)
-    return EQUAL_SIGN;
+    return TOKEN_EQUAL_SIGN;
   if (strcmp(lexeme,"+")==0)
-    return PLUS;
+    return TOKEN_PLUS;
   if (strcmp(lexeme,"-")==0)
-    return MINUS;
+    return TOKEN_MINUS;
   if (strcmp(lexeme,"/")==0)
-    return DIVIDE;
+    return TOKEN_DIVIDE;
   if (strcmp(lexeme,"*")==0)
-    return MULTIPLY;
+    return TOKEN_MULTIPLY;
   if (strcmp(lexeme,"&&&")==0)
-    return AND;
+    return TOKEN_AND;
   if (strcmp(lexeme,"|||")==0)
-    return OR;
+    return TOKEN_OR;
   if(strcmp(lexeme,"size")==0)
-    return SIZE;
+    return TOKEN_SIZE;
   if(strcmp(lexeme,"values")==0)
-    return VALUES;
+    return TOKEN_VALUES;
   
   for (size_t i = 0; i < strlen(lexeme); i++)
   {
     if (lexeme[i] < '0' || lexeme[i] > '9')
-      return VAR_ID;
+      return TOKEN_VAR_ID;
   }
 
-  return INTEGER_LITERAL; // If it is not any of these, it must be an integer literal
+  return TOKEN_INTEGER_LITERAL; // If it is not any of these, it must be an integer literal
 }

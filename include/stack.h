@@ -13,7 +13,7 @@
  */
 typedef struct 
 {
-  int stack_array[STACK_SIZE];
+  char* stack_array[STACK_SIZE];
   int top_index;
 } Stack;
 
@@ -25,11 +25,11 @@ void pop(Stack* st);
 /*
  * Push the element into the stack
  */
-void push(Stack* st, int x);
+void push(Stack* st, char* x);
 
 /*
  * Peek the top element of the stack
  */
-int peek(Stack* st);
+char* peek(Stack* st);
 
 #endif

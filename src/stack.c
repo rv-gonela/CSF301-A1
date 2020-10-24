@@ -11,12 +11,12 @@ void pop(Stack* st)
   st->top_index--;
 }
 
-void push(Stack* st, int x)
+void push(Stack* st, char* x)
 {
   st->stack_array[++st->top_index] = x;
 }
 
-int peek(Stack* st)
+char* peek(Stack* st)
 {
   if(st->top_index==0)
   {

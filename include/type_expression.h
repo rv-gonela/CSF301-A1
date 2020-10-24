@@ -6,23 +6,23 @@
 #define TYPE_EXPRESSION_H
 
 enum varClass {
-  PRIMITIVE, 
-  RECTANGULAR, 
-  JAGGED
+  VARCLASS_PRIMITIVE, 
+  VARCLASS_RECTANGULAR, 
+  VARCLASS_JAGGED
 };
 
 enum rectStatus{
-  STATIC, 
-  DYNAMIC, 
-  NOT_APPLICABLE
+  RECTSTATUS_STATIC, 
+  RECTSTATUS_DYNAMIC, 
+  RECTSTATUS_NOT_APPLICABLE
 };
 
 enum type{
-  INTEGER, 
-  REAL, 
-  BOOLEAN, 
-  JAGGED_ARRAY, 
-  RECTANGULAR_ARRAY
+  TYPE_INTEGER, 
+  TYPE_REAL, 
+  TYPE_BOOLEAN, 
+  TYPE_JAGGED_ARRAY, 
+  TYPE_RECTANGULAR_ARRAY
 };
 
 const char* var_class_map[] = {"primitive", "rectangular", "jagged"};
