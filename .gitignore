@@ -53,3 +53,4 @@ dkms.conf
 
 # YCM config
 .ycm_extra_conf.py
+compile_commands.json
