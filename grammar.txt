@@ -26,7 +26,9 @@
 <jagged_dimension> RECT_OPEN RECT_CLOSE
 <jagged_dimension> RECT_OPEN RECT_CLOSE RECT_OPEN RECT_CLOSE
 <access_index> RECT_OPEN INTEGER_LITERAL RECT_CLOSE
-<jagged_assign_list> R1 <access_index> COLON SIZE INTEGER_LITERAL COLON VALUES CURLY_OPEN <list_integer_list> CURLY_CLOSE
+<jagged_assign_list> <jagged_assignment> <jagged_assign_list>
+<jagged_assign_list> <jagged_assignment>
+<jagged_assignment> R1 <access_index> COLON SIZE INTEGER_LITERAL COLON VALUES CURLY_OPEN <list_integer_list> CURLY_CLOSE
 <list_integer_list> <integer_list> SEMICOLON <list_integer_list>
 <list_integer_list> <integer_list>
 <integer_list> INTEGER_LITERAL <integer_list>
