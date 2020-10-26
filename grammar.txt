@@ -4,7 +4,7 @@
 <declaration_list> <declaration>
 <declaration> DECLARE <var_declaration> COLON <data_type>
 <var_declaration> <var_list>
-<var_declaration> <var>
+<var_declaration> VAR_ID
 <var_list> LIST OF VARIABLES <var_id_list>
 <var_id_list> VAR_ID <var_id_list>
 <var_id_list> VAR_ID
