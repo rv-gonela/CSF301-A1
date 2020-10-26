@@ -36,9 +36,9 @@
 <assignment> <assign_var> EQUAL_SIGN <expression> SEMICOLON
 <assign_var> <arr_id>
 <assign_var> VAR_ID
-<expression> <expression> <low_prec> <term>
+<expression> <term> <low_prec> <expression>
 <expression> <term>
-<term> <term> <high_prec> <operand>
+<term> <operand> <high_prec> <term>
 <term> <operand>
 <operand> <arr_id>
 <operand> VAR_ID
