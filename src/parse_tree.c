@@ -44,6 +44,7 @@ int fillParseTree(ParseTreeNode* root, TokenStreamNode** head, Grammar* G)
       root->is_leaf = 1;
       root->lexeme = (*head)->lexeme;
       root->line_number = (*head)->line_number;
+      root->left_child = NULL;
       *head = (*head)->next;
       works = 1;
     }
