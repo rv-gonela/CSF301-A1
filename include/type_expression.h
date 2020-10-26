@@ -43,7 +43,7 @@ typedef struct{
 
 typedef struct{
   int dimension_count;
-  int** ranges; 
+  int* ranges[2]; 
   enum Type basic_element_type;
 } RectArray;
 
