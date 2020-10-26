@@ -6,22 +6,22 @@
 #define TYPE_EXPRESSION_H
 
 enum VarClass {
-  VARCLASS_PRIMITIVE, 
-  VARCLASS_RECTANGULAR, 
+  VARCLASS_PRIMITIVE,
+  VARCLASS_RECTANGULAR,
   VARCLASS_JAGGED
 };
 
 enum RectStatus{
-  RECTSTATUS_STATIC, 
-  RECTSTATUS_DYNAMIC, 
+  RECTSTATUS_STATIC,
+  RECTSTATUS_DYNAMIC,
   RECTSTATUS_NOT_APPLICABLE
 };
 
 enum Type{
-  TYPE_INTEGER, 
-  TYPE_REAL, 
-  TYPE_BOOLEAN, 
-  TYPE_JAGGED_ARRAY, 
+  TYPE_INTEGER,
+  TYPE_REAL,
+  TYPE_BOOLEAN,
+  TYPE_JAGGED_ARRAY,
   TYPE_RECTANGULAR_ARRAY
 };
 
@@ -43,7 +43,8 @@ typedef struct{
 
 typedef struct{
   int dimension_count;
-  int* ranges[2]; 
+  int* lows;
+  int* highs;
   enum Type basic_element_type;
 } RectArray;
 
@@ -55,4 +56,3 @@ typedef struct{
   enum Type t;
 } TypeExpression;
 #endif
-
