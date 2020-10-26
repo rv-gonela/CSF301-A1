@@ -122,24 +122,26 @@ void createParseTree(ParseTree* t, TokenStream* s, Grammar* G)
 
 void recursePrintParseTree(ParseTreeNode* root)
 {
-  assert(root != NULL);
-  // Print this node
+  assert(root != NULL); // Sanity check
+
   printf("Node:\n");
-  if(root->is_leaf)
+  printf("Symbol:\t%s\n",root->symbol);
+  printf("Depth:\t%zu\n",root->depth);
+  if (root->is_leaf)
   {
-    printf("Node is a leaf\n");
-    printf("Lexeme:%s\n",root->lexeme);
-    printf("Line number: %zu\n",root->line_number);
+    printf("Lexeme:\t%s\n",root->lexeme);
+    printf("Line number:\t%zu\n",root->line_number);
   }
   else
   {
-    printf("Node is internal\n");
-    // TODO: Type expression
-    printf("Symbol:%s\n",root->symbol);
-    /*printf("Grammar rule: TODO\n"); // TODO grammar rule*/
+    //TODO: type expression
+    printf("Grammar rule: ");
+    printRule(root->grammar_rule);
+    printf("\n");
   }
+  printf("\n");
 
-  // DFS
+  // Preorder Traversal
   if(root->left_child != NULL)
     recursePrintParseTree(root->left_child);
   if(root->right_sibling != NULL)

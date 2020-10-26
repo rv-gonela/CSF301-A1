@@ -78,3 +78,12 @@ void readGrammar(char* file_name, Grammar* G)
   }
   return;
 }
+
+void printRule(SymbolNode* head)
+{
+  while(head != NULL)
+  {
+    printf("%s ",head->symbol);
+    head= head->next;
+  }
+}

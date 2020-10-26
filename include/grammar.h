@@ -41,4 +41,6 @@ typedef struct {
  */
 void readGrammar(char* file_name, Grammar* G);
 
+void printRule(SymbolNode* head);
+
 #endif
