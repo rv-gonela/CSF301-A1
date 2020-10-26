@@ -25,9 +25,9 @@ enum type{
   TYPE_RECTANGULAR_ARRAY
 };
 
-const char* var_class_map[] = {"primitive", "rectangular", "jagged"};
-const char* rect_status_map[] = {"static", "dynamic", "not_applicable"};
-const char* type_map[] = {"integer", "real", "Boolean", "jaggedArray", "rectangularArray"};
+//static char* var_class_map[] = {"primitive", "rectangular", "jagged"};
+//static char* rect_status_map[] = {"static", "dynamic", "not_applicable"};
+//static char* type_map[] = {"integer", "real", "Boolean", "jaggedArray", "rectangularArray"};
 
 typedef struct {
   int length;

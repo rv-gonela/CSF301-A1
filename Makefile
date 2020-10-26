@@ -4,7 +4,7 @@ BIN_DIR := .
 EXE := $(BIN_DIR)/driver
 SRC := $(wildcard $(SRC_DIR)/*.c)
 OBJ := $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRC))
-CFLAGS := -Wall
+CFLAGS := -Wall -g
 CPPFLAGS := -Iinclude -MMD -MP
 CC := gcc
 

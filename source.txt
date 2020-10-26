@@ -1,5 +1,8 @@
-declare v1 : integer ;
-declare v2 : integer ;
-v1 = 3 ;
-v2 = 4 ;
-v1 = v1 + v2 ;
+program ()
+{
+  declare v1 : integer ;
+  declare v2 : integer ;
+  v1 = 3 ;
+  v2 = 4 ;
+  v1 = v1 + v2 ;
+}

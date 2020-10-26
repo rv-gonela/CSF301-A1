@@ -4,7 +4,7 @@
 <declaration_list> <declaration>
 <declaration> DECLARE <var_declaration> COLON <data_type>
 <var_declaration> <var_list>
-<var_declaration> <var>
+<var_declaration> VAR_ID
 <var_list> LIST OF VARIABLES <var_id_list>
 <var_id_list> VAR_ID <var_id_list>
 <var_id_list> VAR_ID
@@ -36,9 +36,9 @@
 <assignment> <assign_var> EQUAL_SIGN <expression> SEMICOLON
 <assign_var> <arr_id>
 <assign_var> VAR_ID
-<expression> <expression> <low_prec> <term>
+<expression> <term> <low_prec> <expression>
 <expression> <term>
-<term> <term> <high_prec> <operand>
+<term> <operand> <high_prec> <term>
 <term> <operand>
 <operand> <arr_id>
 <operand> VAR_ID

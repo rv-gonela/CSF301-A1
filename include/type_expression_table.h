@@ -3,8 +3,8 @@
 #include <string.h>
 #include "type_expression.h"
 
-#ifndef TYPEEXPRESSIONTABLE_H
-#define TYPEEXPRESSIONTABLE_H
+#ifndef TYPE_EXPRESSIONTABLE_H
+#define TYPE_EXPRESSIONTABLE_H
 
 typedef struct{
   char* field1[21];

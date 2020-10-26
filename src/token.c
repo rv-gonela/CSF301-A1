@@ -65,3 +65,5 @@ enum Token lexemeType(char* lexeme)
 
   return TOKEN_INTEGER_LITERAL; // If it is not any of these, it must be an integer literal
 }
+
+const char* tokenToSymbolMap[30] = {"PROGRAM", "PAR", "CURLY_OPEN", "CURLY_CLOSE", "DECLARE", "COLON", "SEMICOLON", "INTEGER", "REAL", "BOOL", "LIST", "OF", "VARIABLES", "RECT_OPEN", "RECT_CLOSE", "DOUBLE_PERIOD", "JAGGED", "ARRAY", "EQUAL_SIGN", "PLUS", "MINUS", "DIVIDE", "MULTIPLY", "AND", "OR", "VAR_ID", "INTEGER_LITERAL", "SIZE", "VALUES", "NONE"};

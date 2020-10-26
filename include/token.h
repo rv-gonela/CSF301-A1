@@ -35,7 +35,8 @@ enum Token {
   TOKEN_VAR_ID,
   TOKEN_INTEGER_LITERAL,
   TOKEN_SIZE,
-  TOKEN_VALUES
+  TOKEN_VALUES,
+  TOKEN_NONE
 };
 
 /*
@@ -44,5 +45,7 @@ enum Token {
  * lexeme : The given lexeme
  */
 enum Token lexemeType(char* lexeme);
+
+extern const char* tokenToSymbolMap[30];
 
 #endif
