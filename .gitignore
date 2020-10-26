@@ -55,3 +55,4 @@ dkms.conf
 .ycm_extra_conf.py
 compile_commands.json
 .clangd/*
+./driver

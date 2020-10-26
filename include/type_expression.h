@@ -5,19 +5,19 @@
 #ifndef TYPE_EXPRESSION_H
 #define TYPE_EXPRESSION_H
 
-enum varClass {
+enum VarClass {
   VARCLASS_PRIMITIVE, 
   VARCLASS_RECTANGULAR, 
   VARCLASS_JAGGED
 };
 
-enum rectStatus{
+enum RectStatus{
   RECTSTATUS_STATIC, 
   RECTSTATUS_DYNAMIC, 
   RECTSTATUS_NOT_APPLICABLE
 };
 
-enum type{
+enum Type{
   TYPE_INTEGER, 
   TYPE_REAL, 
   TYPE_BOOLEAN, 
@@ -25,34 +25,34 @@ enum type{
   TYPE_RECTANGULAR_ARRAY
 };
 
-//static char* var_class_map[] = {"primitive", "rectangular", "jagged"};
-//static char* rect_status_map[] = {"static", "dynamic", "not_applicable"};
-//static char* type_map[] = {"integer", "real", "Boolean", "jaggedArray", "rectangularArray"};
+static char* var_class_map[] = {"primitive", "rectangular", "jagged"};
+static char* rect_status_map[] = {"static", "dynamic", "not_applicable"};
+static char* type_map[] = {"integer", "real", "Boolean", "jaggedArray", "rectangularArray"};
 
 typedef struct {
   int length;
   int* ranges;
-} rangeR2Item;
+} RangeR2Item;
 
 typedef struct{
   int dimension_count;
   int range_R1[2];
-  rangeR2Item* range_R2;
-  enum type basic_element_type;
-} jaggedArray;
+  RangeR2Item* range_R2;
+  enum Type basic_element_type;
+} JaggedArray;
 
 typedef struct{
   int dimension_count;
-  int* ranges[2];
-  enum type basic_element_type;
-} rectArray;
+  int** ranges; 
+  enum Type basic_element_type;
+} RectArray;
 
 typedef struct{
-  union array{
-    jaggedArray j;
-    rectArray r;
-  };
-  enum type t;
-} typeExpression;
+  union {
+    JaggedArray j;
+    RectArray r;
+  } array;
+  enum Type t;
+} TypeExpression;
 #endif
 

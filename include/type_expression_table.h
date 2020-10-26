@@ -7,17 +7,18 @@
 #define TYPE_EXPRESSIONTABLE_H
 
 typedef struct{
-  char* field1[21];
-  enum varClass field2;
-  enum rectStatus field3;
-  typeExpression field4;
-} typeExpressionRecord;
+  char* var_name;
+  enum VarClass arrayType;
+  enum RectStatus rectType;
+  TypeExpression type_expression;
+} TypeExpressionRecord;
 
 typedef struct {
-  typeExpressionRecord* T;
+  TypeExpressionRecord* T;
   size_t size;
-} typeExpressionTable;
+  size_t capacity;
+} TypeExpressionTable;
 
-void printTypeExpressionTable(typeExpressionTable T);
+void printTypeExpressionTable(TypeExpressionTable T);
 
 #endif
