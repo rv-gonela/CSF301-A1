@@ -337,7 +337,6 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
               temp_size=strtol(jagged_size->lexeme,NULL,10);
               declare_type.type_expression.array.j.range_R2[range_r2_item_index].length=temp_size;
               declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges=(int*)malloc(sizeof(int)*temp_size)
-
               while(jagged_size->symbol!=NULL && strcmp(jagged_size->symbol,"<list_integer_list>")!=0)
               {//8
                 jagged_size=jagged_size->right_sibling; //**pointing to list_integer_list in rhs of jagged_assignment**
@@ -345,7 +344,6 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
               if(jagged_size->symbol==NULL)
               {//8
                 //**TODO: error for nothing between curly braces
-                int trash;
               }//8
               else
               {//8
@@ -376,7 +374,14 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                     while(strcmp(integer->symbol, "INTEGER_LITERAL")==0)
                     {//11
                       temp_count++;
+                      if(integer->right_sibling !=NULL)
+                      {
                       integer = integer->right_sibling->left_child;
+                      }
+                      else
+                      {
+                        break;
+                      }
                     }//11
 
                     declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = temp_count;
@@ -396,7 +401,6 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                 if(integer_list->right_sibling !=NULL)
                 {//9
                   //TODO: Error for having too many integer lists.
-                  int trash;
                 }//9
               }//8
               range_r2_item_index++;
@@ -414,6 +418,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
           {//6
             declare_type.type_expression.array.j.dimension_count=2;
             //**TODO: PARSE 2d jagged array
+
             while(1)
             {//7
               ParseTreeNode* jagged_size=jagged_assignment->left_child;
@@ -424,7 +429,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
               }//8
               temp_size=strtol(jagged_size->lexeme,NULL,10);
               declare_type.type_expression.array.j.range_R2[range_r2_item_index].length=temp_size;
-              declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges=(int*)malloc(sizeof(int)*temp_size);
+              declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges=(int*)malloc(sizeof(int)*temp_size)
               while(jagged_size->symbol!=NULL && strcmp(jagged_size->symbol,"<list_integer_list>")!=0)
               {//8
                 jagged_size=jagged_size->right_sibling; //**pointing to list_integer_list in rhs of jagged_assignment**
@@ -432,17 +437,70 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
               if(jagged_size->symbol==NULL)
               {//8
                 //**TODO: error for nothing between curly braces
-                int trash;
               }//8
-              ParseTreeNode* integer_list = jagged_size->left_child;
-              //**TODO check ranges[i]=1 for all range_R2.ranges[i]** if true, then store else throw error and don't store**
-
-              for (int i=0; i<temp_size; i++)//Raghu was Reborn a Legend here
+              else
               {//8
-                declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[i]=1;
+                ParseTreeNode* integer_list = jagged_size->left_child; //**pointing to semicolon or integer list in the lhs of list_integer_list
+                for(int int_list_index=0; int_list_index<temp_size; int_list_index++)
+                {//9
+                  //parsing list_integer_list
+
+                  if(strcmp(integer_list->symbol, "SEMICOLON")==0)
+                  {//10
+                    declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = 0;
+                    //**TODO: error for 2D JA size mismatch
+                    if(integer_list->right_sibling !=NULL)
+                    {//11
+                      integer_list=integer_list->right_sibling->left_child;
+                    }//11
+                    else
+                    {//11
+                      break;
+                    }//11
+
+                  }//10
+                  else
+                  {//10
+
+                    ParseTreeNode* integer = integer_list->left_child;
+                    int temp_count = 0;
+                    while(strcmp(integer->symbol, "INTEGER_LITERAL")==0)
+                    {//11
+                      temp_count++;
+                      if(integer->right_sibling !=NULL)
+                      {
+                      integer = integer->right_sibling->left_child;
+                      }
+                      else
+                      {
+                        break;
+                      }
+                    }//11
+                    if(temp_count>1)
+                    {
+                      //TODO: type definition error for 2D jagged array
+                    }
+                    declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = 1;
+
+                    if(integer_list->right_sibling != NULL)
+                    {//11
+                      integer_list = integer_list-> right_sibling->right_sibling->left_child
+                    }//11
+                    else if(int_list_index<temp_size-1)
+                    {//11
+                      //**TODO: Print error for too less number of integer lists
+                      break;
+                    }//11
+                  }//10
+
+                }//9
+                if(integer_list->right_sibling !=NULL)
+                {//9
+                  //TODO: Error for having too many integer lists.
+                }//9
               }//8
               range_r2_item_index++;
-              if (jagged_assignment->right_sibling != NULL)
+              if(jagged_assignment->right_sibling != NULL)
               {//8
                 jagged_assignment=jagged_assignment->right_sibling->left_child;
               }//8
@@ -524,6 +582,7 @@ void validateArrayId(ParseTreeNode* array_node, TypeExpressionTable* E)
   // Make sure index accesses are good
   ParseTreeNode* index_node = array_node->left_child->right_sibling->right_sibling;
   int dim_index = 0;
+  int first_dim, second_dim, low;
   while(1)
   {
     index_node = index_node->left_child;
@@ -534,7 +593,7 @@ void validateArrayId(ParseTreeNode* array_node, TypeExpressionTable* E)
       if (lhs_record.type_expression.t==TYPE_RECTANGULAR_ARRAY)
       {
         // It is a rectangular array, access it as such
-        if (index_value < lhs_record.type_expression.array.r.lows[dim_index] || index_value > lhs_record.type_expression.array.r.highs[dim_index])
+        if (dim_index >= lhs_record.type_expression.array.r.dimension_count)
         {
           // IndexOutOfBoundsAccess
           printf("**ERROR**\n");
@@ -542,11 +601,75 @@ void validateArrayId(ParseTreeNode* array_node, TypeExpressionTable* E)
           printf("Statement type: Assignment\n");
           printf("Operator: Index access\n");
           printf("Depth: %zu\n",index_node->left_child->depth);
-          printf("Index access in dimension %d must be between %d and %d\n",dim_index,lhs_record.type_expression.array.r.lows[dim_index],lhs_record.type_expression.array.r.highs[dim_index]);
+          printf("Attempting to access element from a dimension that is out of bounds\n");
+        }
+
+        else if (index_value < lhs_record.type_expression.array.r.lows[dim_index] || index_value > lhs_record.type_expression.array.r.highs[dim_index])
+        {
+          // IndexOutOfBoundsAccess
+          printf("**ERROR**\n");
+          printf("Line number: %zu\n",index_node->left_child->line_number);
+          printf("Statement type: Assignment\n");
+          printf("Operator: Index access\n");
+          printf("Depth: %zu\n",index_node->left_child->depth);
+          printf("Index access in dimension %d must be between %d and %d\n",dim_index+1,lhs_record.type_expression.array.r.lows[dim_index],lhs_record.type_expression.array.r.highs[dim_index]);
         }
       }
       else if (lhs_record.type_expression.t == TYPE_JAGGED_ARRAY)
       {
+        if(dim_index==0)
+        {
+            first_dim=index_value;
+            if(lhs_record.type_expression.array.j.range_R1[0]>index_value ||lhs_record.type_expression.array.j.range_R1[1]<index_value)
+            {
+              // IndexOutOfBoundsAccess
+              printf("**ERROR**\n");
+              printf("Line number: %zu\n",index_node->left_child->line_number);
+              printf("Statement type: Assignment\n");
+              printf("Operator: Index access\n");
+              printf("Depth: %zu\n",index_node->left_child->depth);
+              printf("Index access in dimension %d must be between %d and %d\n",dim_index+1,lhs_record.type_expression.array.j.range_R1[0],lhs_record.type_expression.array.j.range_R1[1]);
+            }
+        }
+        else if(dim_index==1)
+        {
+          second_dim=index_value;
+          low=lhs_record.type_expression.array.j.range_R1[0];
+          if(index_value>=lhs_record.type_expression.array.j.range_R2[first_dim-low].length)
+          {
+            // IndexOutOfBoundsAccess
+            printf("**ERROR**\n");
+            printf("Line number: %zu\n",index_node->left_child->line_number);
+            printf("Statement type: Assignment\n");
+            printf("Operator: Index access\n");
+            printf("Depth: %zu\n",index_node->left_child->depth);
+            printf("Index access in dimension %d must be between 0 and %d\n",dim_index+1,lhs_record.type_expression.array.j.range_R2[first_dim-low].length);
+          }
+        }
+        else
+        {
+          if(lhs_record.type_expression.array.j.dimension_count==2)
+          {
+            // IndexOutOfBoundsAccess
+            printf("**ERROR**\n");
+            printf("Line number: %zu\n",index_node->left_child->line_number);
+            printf("Statement type: Assignment\n");
+            printf("Operator: Index access\n");
+            printf("Depth: %zu\n",index_node->left_child->depth);
+            printf("Attempting to access 3rd dimension element in 2D jagged array\n");
+          }
+          else if(index_value>=lhs_record.type_expression.array.j.range_R2[first_dim-low].ranges[second_dim])
+          {
+            // IndexOutOfBoundsAccess
+            printf("**ERROR**\n");
+            printf("Line number: %zu\n",index_node->left_child->line_number);
+            printf("Statement type: Assignment\n");
+            printf("Operator: Index access\n");
+            printf("Depth: %zu\n",index_node->left_child->depth);
+            printf("Index access in dimension %d must be between 0 and %d\n",dim_index+1,lhs_record.type_expression.array.j.range_R2[first_dim-low].ranges[second_dim]);
+          }
+        }
+
         // TODO: It is a jagged array, access it as such
       }
     }
