@@ -13,20 +13,15 @@ int main()
 
   printf("Grammar loaded\n");
 
-  /*for (int i = 0; i < G->rule_count; i++)*/
-  /*{*/
-    /*SymbolNode* head = G->grammar_lhs[i];*/
-    /*while(head != NULL)*/
-    /*{*/
-      /*printf("%s ", head->symbol);*/
-      /*head = head->next;*/
-    /*}*/
-    /*printf("\n\n");*/
-  /*}*/
-
   ParseTree* t = (ParseTree*)malloc(sizeof(ParseTree));
   createParseTree(t,s,G);
   printParseTree(t);
+
+  TypeExpressionTable* E = malloc(sizeof(TypeExpressionTable));
+  E->capacity = 8;
+  E->size = 0;
+  E->T = malloc(E->capacity*sizeof(TypeExpressionRecord));
+  traverseParseTree(t,E);
 
   free(s);
   free(G);
