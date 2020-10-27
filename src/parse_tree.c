@@ -198,7 +198,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
           declare_type.arrayType = VARCLASS_RECTANGULAR;
           declare_type.type_expression.t = TYPE_RECTANGULAR_ARRAY;
           declare_type.type_expression.array.r.basic_element_type = TYPE_INTEGER;
-
+          declare_type.type_expression.array.r.dimension_count=0;
           // Find the indices
           ParseTreeNode* dim_node = array_node->left_child->left_child->right_sibling->left_child;
           while(1)
@@ -215,10 +215,10 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
               declare_type.type_expression.array.r.highs=(int*)realloc(declare_type.type_expression.array.r.highs, sizeof(int)*declare_type.type_expression.array.r.dimension_count);
             }
             // We are now pointing to a single indexing dimension
-            ParseTreeNode* sing_index_node = dim_node->left_child;//**sing_index_node i spointing to RECT_OPEN**
+            ParseTreeNode* sing_index_node = dim_node->left_child->right_sibling;//**sing_index_node is pointing to RECT_OPEN**
             while(sing_index_node != NULL)
             {
-              if (strcmp(sing_index_node->left_child->symbol,"<index>")==0)
+              if (strcmp(sing_index_node->symbol,"<index>")==0)
               {
                 //**for low**
                 if (strcmp(sing_index_node->left_child->symbol,"INTEGER_LITERAL") == 0)
@@ -226,8 +226,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                   // Static
                   if (declare_type.rectType != RECTSTATUS_DYNAMIC)
                     declare_type.rectType = RECTSTATUS_STATIC;
-
-                  int index_value = strtol(sing_index_node->lexeme,NULL,10);
+                  int index_value = strtol(sing_index_node->left_child->lexeme,NULL,10);
                   declare_type.type_expression.array.r.lows[declare_type.type_expression.array.r.dimension_count-1] = index_value;
                 }
                 else if (strcmp(sing_index_node->left_child->symbol,"VAR_ID")==0)
@@ -257,10 +256,8 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                   // Static
                   if (declare_type.rectType != RECTSTATUS_DYNAMIC)
                     declare_type.rectType = RECTSTATUS_STATIC;
-
-                  int index_value = strtol(sing_index_node->lexeme,NULL,10);
+                  int index_value = strtol(sing_index_node->left_child->lexeme,NULL,10);
                   declare_type.type_expression.array.r.highs[declare_type.type_expression.array.r.dimension_count-1]=index_value;
-
                 }
                 else if (strcmp(sing_index_node->left_child->symbol,"VAR_ID")==0)
                 {
@@ -287,11 +284,13 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                 break;
               }
               sing_index_node = sing_index_node->right_sibling;
-          }
+            }
 
             // Check the next dimension!
             if (dim_node->right_sibling != NULL)
               dim_node = dim_node->right_sibling->left_child; //**added left_child to keep dim_node on <dimension>**
+            else
+              break;
           }
         }
         else if(strcmp(array_node->left_child->symbol,"<jagged_array>")==0)
@@ -869,18 +868,15 @@ void validateParseTree(ParseTreeNode* root, TypeExpressionTable* E)
 void traverseParseTree(ParseTree* t, TypeExpressionTable* E)
 {
   ParseTreeNode* root = t-> root;
-
   // Descend the tree to reach the statement list
   root = root->left_child;
   while(strcmp(root->symbol,"<statement_list>")!=0) //**changed == to !=**
   {
     root = root->right_sibling;
   }
-
   // Fill the type expression table with the declaration list
   ParseTreeNode* declarationRoot = root->left_child;
   populateExpTable(declarationRoot,E);
-
   // Validate the assignment statements with the type expression table
   ParseTreeNode* assignmentRoot = declarationRoot->right_sibling;
   validateParseTree(assignmentRoot,E);

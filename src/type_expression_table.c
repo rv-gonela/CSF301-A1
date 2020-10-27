@@ -11,7 +11,7 @@ void printTypeExpressionTable(TypeExpressionTable Te){
     printf("%s", type_map[T[i].type_expression.t]);
     if(T[i].arrayType!=0)
     {
-      if(T[i].type_expression.t==1)
+      if(T[i].arrayType==1)
       {
         RectArray r=T[i].type_expression.array.r;
         printf(", dimensions=%d, ", r.dimension_count);
@@ -50,10 +50,10 @@ void printTypeExpressionTable(TypeExpressionTable Te){
           {
             printf("%d, ", j.range_R2[count-1].ranges[dim2]);
           }
-          printf("%d]", j.range_R2[count-1].ranges[j.range_R2[count-1].length-1]);
+          printf("%d]),", j.range_R2[count-1].ranges[j.range_R2[count-1].length-1]);
         }
       }
-      printf("),basicElementType = integer");
+      printf("basicElementType = integer");
     }
     printf(">\n");
   }

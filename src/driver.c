@@ -10,7 +10,19 @@ int main()
 
   Grammar* G = (Grammar*)malloc(sizeof(Grammar));
   readGrammar("grammar.txt",G);
-
+  //Driver code to print grammar rules
+  /*
+  for(int i=0;i<G->rule_count;i++)
+  {
+    SymbolNode* head=G->grammar_lhs[i];
+    while(head!=NULL)
+    {
+      printf("%s ",head->symbol );
+      head=head->next;
+    }
+    printf("\n");
+  }
+  */
   printf("Grammar loaded\n");
 
   ParseTree* t = (ParseTree*)malloc(sizeof(ParseTree));
