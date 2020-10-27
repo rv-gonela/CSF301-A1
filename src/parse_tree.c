@@ -234,7 +234,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                   // Dynamic
                   declare_type.rectType = RECTSTATUS_DYNAMIC;
                   declare_type.type_expression.array.r.highs[declare_type.type_expression.array.r.dimension_count-1]=0;
-                  
+
                   // Check for type error
                   TypeExpressionRecord var_ter = getTypeExpressionRecord(E,sing_index_node->left_child->lexeme);
                   if(var_ter.type_expression.t != TYPE_INTEGER)
@@ -319,7 +319,33 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
           else
           {
             declare_type.type_expression.array.j.dimension_count=2;
-            //**TODO: PARSE 2d jagged array 
+            //**TODO: PARSE 2d jagged array
+            ParseTreeNode* jagged_assignment = jagged_assign_list->left_child;
+            int temp_high=declare_type.type_expression.array.j.range_R1[1];
+            int temp_low=declare_type.type_expression.array.j.range_R1[0];
+            declare_type.type_expression.array.j.range_R2 = (RangeR2Item*)malloc(sizeof(RangeR2Item)*(temp_high-temp_low+1));
+            while(1){
+              ParseTreeNode* jagged_size=jagged_assignment->left_child;
+              int temp_size;
+              while(strcmp(jagged_size->symbol,"INTEGER_LITERAL")!=0)
+              {
+                jagged_size=jagged_size->right_sibling;
+              }
+              temp_size=strtol(jagged_size->lexeme,NULL,10);
+              while(strcmp(jagged_size->symbol,"<list_integer_list>")!=0)
+              {
+                jagged_size=jagged_size->right_sibling; //**pointing to list_integer_list in rhs of jagged_assignment**
+              }
+              ParseTreeNode* integer_list = jagged_size->left_child;
+              if(integer_list->right_sibling)
+              if(jagged_assignment->right_sibling != NULL){
+                jagged_assignment=jagged_assignment->right_sibling->left_child;
+              }
+              else
+              {
+                break;
+              }
+            }
           }
         }
       }
@@ -433,7 +459,7 @@ void validateArrayId(ParseTreeNode* array_node, TypeExpressionTable* E)
         printf("Depth:%zu\n",index_node->left_child->depth);
         printf("Array ranges must be an integer\n");
       }
-    }     
+    }
     if (index_node->right_sibling==NULL) // Reached the end of the index list
       break;
 
@@ -494,7 +520,7 @@ void validateExpression(ParseTreeNode* expression_root, TypeExpressionTable* E)
       expression_root->type_expression = term1->type_expression;
     }
     else if (strcmp(operation,"DIVIDE")==0)
-    { 
+    {
       if (term1->type_expression.t == TYPE_BOOLEAN || term2->type_expression.t == TYPE_BOOLEAN)
       {
         printf("**ERROR**\n");
@@ -528,7 +554,7 @@ void validateExpression(ParseTreeNode* expression_root, TypeExpressionTable* E)
       expression_root->type_expression.t = TYPE_REAL;
     }
     else if (strcmp(operation,"AND")==0 || strcmp(operation,"OR")==0)
-    { 
+    {
       if (term1->type_expression.t != TYPE_BOOLEAN || term2->type_expression.t != TYPE_BOOLEAN)
       {
         printf("**ERROR**\n");
