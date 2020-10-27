@@ -351,7 +351,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
     populateExpTable(root->right_sibling,E);
 }
 
-int validateArrayId(ParseTreeNode* array_node, TypeExpressionTable* E)
+void validateArrayId(ParseTreeNode* array_node, TypeExpressionTable* E)
 {
   TypeExpressionRecord lhs_record = getTypeExpressionRecord(E,array_node->left_child->lexeme);
 
@@ -377,7 +377,6 @@ int validateArrayId(ParseTreeNode* array_node, TypeExpressionTable* E)
           printf("Operator: Index access\n");
           printf("Depth: %zu\n",index_node->left_child->depth);
           printf("Index access in dimension %d must be between %d and %d\n",dim_index,lhs_record.type_expression.array.r.lows[dim_index],lhs_record.type_expression.array.r.highs[dim_index]);
-          return 0;
         }
       }
       else if (lhs_record.type_expression.t == TYPE_JAGGED_ARRAY)
@@ -398,7 +397,6 @@ int validateArrayId(ParseTreeNode* array_node, TypeExpressionTable* E)
         //statements.
         printf("Depth:%zu\n",index_node->left_child->depth);
         printf("Array ranges must be an integer\n");
-        return 0;
       }
     }     
     if (index_node->right_sibling==NULL) // Reached the end of the index list
@@ -407,11 +405,110 @@ int validateArrayId(ParseTreeNode* array_node, TypeExpressionTable* E)
     index_node = index_node->right_sibling;
     dim_index++;
   }
-
-  return 1;
 }
 
-// TODO
+void validateExpression(ParseTreeNode* expression_root, TypeExpressionTable* E)
+{
+  // 1. Booleans can only be operated on by AND and OR
+  // 2. Operands must always be of the same type
+  // 3. Divide gives a real
+  if(strcmp(expression_root->symbol,"<arr_id>")==0)
+  {
+    expression_root->type_expression = getTypeExpressionRecord(E,expression_root->left_child->lexeme).type_expression;
+    validateArrayId(expression_root,E);
+  }
+  else if (strcmp(expression_root->symbol,"VAR_ID")==0)
+  {
+    expression_root->type_expression = getTypeExpressionRecord(E,expression_root->lexeme).type_expression;
+  }
+  else
+  {
+    ParseTreeNode* term1 = expression_root->left_child;
+    ParseTreeNode* term2 = expression_root->left_child->right_sibling->right_sibling;
+    validateExpression(term1,E); // First term
+    validateExpression(term2,E); // Second term
+
+    char* operation = expression_root->left_child->right_sibling->left_child->symbol; // Operation
+
+    // The terms should definitely have the same type
+    if(!isTEEqual(term1->type_expression, term2->type_expression))
+    {
+      printf("**ERROR**\n");
+      printf("Line Number: %zu\n",expression_root->line_number); // TODO: fill line numbers for the entire parse tree
+      printf("Statement type: Assignment\n");
+      printf("Operator: %s\n",operation);
+      // TODO: print type
+      // TODO: print type
+      printf("Depth: %zu\n",expression_root->depth);
+      printf("Operands must be of the same type!\n");
+    }
+
+    // Combine based on operation
+    if (strcmp(operation,"PLUS")==0 || strcmp(operation,"MINUS")==0 || strcmp(operation,"MULTIPLY")==0)
+    {
+      if (term1->type_expression.t == TYPE_BOOLEAN || term2->type_expression.t == TYPE_BOOLEAN)
+      {
+        printf("**ERROR**\n");
+        printf("Line Number: %zu\n",expression_root->line_number);
+        printf("Statement type: Assignment\n");
+        printf("Operator: %s\n",operation);
+        // TODO: print type
+        printf("Depth: %zu\n",expression_root->depth);
+        printf("This operation cannot be done on booleans!\n");
+      }
+      expression_root->type_expression = term1->type_expression;
+    }
+    else if (strcmp(operation,"DIVIDE")==0)
+    { 
+      if (term1->type_expression.t == TYPE_BOOLEAN || term2->type_expression.t == TYPE_BOOLEAN)
+      {
+        printf("**ERROR**\n");
+        printf("Line Number: %zu\n",expression_root->line_number);
+        printf("Statement type: Assignment\n");
+        printf("Operator: %s\n",operation);
+        // TODO: print type
+        printf("Depth: %zu\n",expression_root->depth);
+        printf("This operation cannot be done on booleans!\n");
+      }
+      if (term1->type_expression.t == TYPE_RECTANGULAR_ARRAY || term2->type_expression.t == TYPE_RECTANGULAR_ARRAY)
+      {
+        printf("**ERROR**\n");
+        printf("Line Number: %zu\n",expression_root->line_number);
+        printf("Statement type: Assignment\n");
+        printf("Operator: %s\n",operation);
+        // TODO: print type
+        printf("Depth: %zu\n",expression_root->depth);
+        printf("This operation cannot be done on arrays!\n");
+      }
+      if (term1->type_expression.t == TYPE_JAGGED_ARRAY || term2->type_expression.t == TYPE_JAGGED_ARRAY)
+      {
+        printf("**ERROR**\n");
+        printf("Line Number: %zu\n",expression_root->line_number);
+        printf("Statement type: Assignment\n");
+        printf("Operator: %s\n",operation);
+        // TODO: print type
+        printf("Depth: %zu\n",expression_root->depth);
+        printf("This operation cannot be done on arrays!\n");
+      }
+      expression_root->type_expression.t = TYPE_REAL;
+    }
+    else if (strcmp(operation,"AND")==0 || strcmp(operation,"OR")==0)
+    { 
+      if (term1->type_expression.t != TYPE_BOOLEAN || term2->type_expression.t != TYPE_BOOLEAN)
+      {
+        printf("**ERROR**\n");
+        printf("Line Number: %zu\n",expression_root->line_number);
+        printf("Statement type: Assignment\n");
+        printf("Operator: %s\n",operation);
+        // TODO: print type
+        printf("Depth: %zu\n",expression_root->depth);
+        printf("This operation must be done on booleans!\n");
+      }
+      expression_root->type_expression = term1->type_expression;
+    }
+  }
+}
+
 void validateParseTree(ParseTreeNode* root, TypeExpressionTable* E)
 {
   // Sanity check
@@ -420,6 +517,7 @@ void validateParseTree(ParseTreeNode* root, TypeExpressionTable* E)
 
   root = root->left_child; // Go to the assignment statement
   TypeExpressionRecord lhs_record;
+  TypeExpressionRecord rhs_record;
 
   ParseTreeNode* assignment_node = root->left_child;
   while(assignment_node !=  NULL)
@@ -431,24 +529,37 @@ void validateParseTree(ParseTreeNode* root, TypeExpressionTable* E)
       {
         // This is just a normal variable
         lhs_record = getTypeExpressionRecord(E,assignment_node->left_child->lexeme);
+        assignment_node->type_expression = lhs_record.type_expression;
       }
       else if (strcmp(assignment_node->left_child->symbol,"<arr_id>")==0)
       {
         // This is an array **weep**
         ParseTreeNode* array_node = assignment_node->left_child;
         lhs_record = getTypeExpressionRecord(E,array_node->left_child->lexeme);
-        if (!validateArrayId(array_node,E))
-          return;
+        array_node->type_expression = lhs_record.type_expression;
+        validateArrayId(array_node,E);
       }
     }
     else if (strcmp(assignment_node->symbol,"<expression>"))
     {
       // This is the RHS QwQ
+      validateExpression(assignment_node,E);
+      rhs_record.type_expression = assignment_node->type_expression;
+    }
+
+    if (!isTEEqual(rhs_record.type_expression,lhs_record.type_expression))
+    {
+      printf("**ERROR**\n");
+      printf("Line Number: %zu\n",root->line_number);
+      printf("Statement type: Assignment\n");
+      printf("Operator: =\n");
+      // TODO: print type
+      printf("Depth: %zu\n",root->depth);
+      printf("Assignment must have same type on RHS and LHS\n");
     }
 
     assignment_node = assignment_node->right_sibling;
   }
-  
 
   if(root->right_sibling != NULL)
     validateParseTree(root->right_sibling,E);

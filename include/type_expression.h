@@ -55,4 +55,9 @@ typedef struct{
   } array;
   enum Type t;
 } TypeExpression;
+
+int isTEEqual(TypeExpression a, TypeExpression b);
+
+void printTE(TypeExpression a);
+
 #endif
