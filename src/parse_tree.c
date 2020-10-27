@@ -160,7 +160,7 @@ void printParseTree(ParseTree* t)
 }
 //------------------------------------------
 void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
-{//1
+{
   if (strcmp(root->symbol,"<declaration_list>")!=0) // Sanity check
     return;
   root = root->left_child; // Move to the declare statement
@@ -170,12 +170,12 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
   size_t incoming_size = E->size;
   TypeExpressionRecord declare_type;
   while(head != NULL)
-  {//2 //**Here we are not jumping into <var_list> to take into account the variable names.
+  {
     if (strcmp(head->symbol,"<data_type>")==0)
-    {//3
+    {
       // Populate the type expression with this information
       if(strcmp(head->left_child->symbol,"<primitive>")==0)
-      {//4
+      {
         declare_type.arrayType = VARCLASS_PRIMITIVE;
         declare_type.rectType= RECTSTATUS_NOT_APPLICABLE;
 
@@ -187,51 +187,51 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
           declare_type.type_expression.t = TYPE_REAL;
         else if (strcmp(primitive_node->left_child->symbol,"BOOL")==0)
           declare_type.type_expression.t = TYPE_BOOLEAN;
-      }//4
-      else if (strcmp(head->left_child->symbol,"<array_type>")==0) //**changed array to array_type**
-      {//4
+      }
+      else if (strcmp(head->left_child->symbol,"<array_type>")==0)
+      {
         // Need to go deeper
         ParseTreeNode* array_node = head->left_child;
         if(strcmp(array_node->left_child->symbol,"<rect_array>")==0)
-        {//5
+        {
           // This is a rectangular array
           declare_type.arrayType = VARCLASS_RECTANGULAR;
           declare_type.type_expression.t = TYPE_RECTANGULAR_ARRAY;
           declare_type.type_expression.array.r.basic_element_type = TYPE_INTEGER;
 
           // Find the indices
-          ParseTreeNode* dim_node = array_node->left_child->left_child->right_sibling->left_child; // Now it points at the dimension in the rhs of rect_dimension_list//** changed array_node->left_child->right_sibling to left_child->left_child->right_sibling->left_child**
+          ParseTreeNode* dim_node = array_node->left_child->left_child->right_sibling->left_child;
           while(1)
-          {//6
+          {
             declare_type.type_expression.array.r.dimension_count++;
             if(declare_type.type_expression.array.r.dimension_count==1)
-            {//7
+            {
               declare_type.type_expression.array.r.lows=(int*)malloc(sizeof(int));
               declare_type.type_expression.array.r.highs=(int*)malloc(sizeof(int));
-            }//7
+            }
             else
-            {//7
+            {
               declare_type.type_expression.array.r.lows=(int*)realloc(declare_type.type_expression.array.r.lows, sizeof(int)*declare_type.type_expression.array.r.dimension_count);
               declare_type.type_expression.array.r.highs=(int*)realloc(declare_type.type_expression.array.r.highs, sizeof(int)*declare_type.type_expression.array.r.dimension_count);
-            }//7
+            }
             // We are now pointing to a single indexing dimension
             ParseTreeNode* sing_index_node = dim_node->left_child;//**sing_index_node i spointing to RECT_OPEN**
             while(sing_index_node != NULL)
-            {//7
+            {
               if (strcmp(sing_index_node->left_child->symbol,"<index>")==0)
-              {//8
+              {
                 //**for low**
                 if (strcmp(sing_index_node->left_child->symbol,"INTEGER_LITERAL") == 0)
-                {//9
+                {
                   // Static
                   if (declare_type.rectType != RECTSTATUS_DYNAMIC)
                     declare_type.rectType = RECTSTATUS_STATIC;
 
                   int index_value = strtol(sing_index_node->lexeme,NULL,10);
                   declare_type.type_expression.array.r.lows[declare_type.type_expression.array.r.dimension_count-1] = index_value;
-                }//9
+                }
                 else if (strcmp(sing_index_node->left_child->symbol,"VAR_ID")==0)
-                {//9
+                {
                   // Dynamic
                   declare_type.rectType = RECTSTATUS_DYNAMIC;
                   declare_type.type_expression.array.r.highs[declare_type.type_expression.array.r.dimension_count-1]=0;
@@ -239,7 +239,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                   // Check for type error
                   TypeExpressionRecord var_ter = getTypeExpressionRecord(E,sing_index_node->left_child->lexeme);
                   if(var_ter.type_expression.t != TYPE_INTEGER)
-                  {//10
+                  {
                     printf("**ERROR**\n");
                     printf("Line Number: %zu\n",sing_index_node->left_child->line_number);
                     printf("Statement Type: Declaration\n");
@@ -248,12 +248,12 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                     //statements.
                     printf("Depth:%zu\n",sing_index_node->left_child->depth);
                     printf("Array ranges must be an integer\n");
-                  }//10
-                }//9
+                  }
+                }
                 //for high
                 sing_index_node=sing_index_node->right_sibling->right_sibling;
                 if (strcmp(sing_index_node->left_child->symbol,"INTEGER_LITERAL") == 0)
-                {//9
+                {
                   // Static
                   if (declare_type.rectType != RECTSTATUS_DYNAMIC)
                     declare_type.rectType = RECTSTATUS_STATIC;
@@ -261,9 +261,9 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                   int index_value = strtol(sing_index_node->lexeme,NULL,10);
                   declare_type.type_expression.array.r.highs[declare_type.type_expression.array.r.dimension_count-1]=index_value;
 
-                }//9
+                }
                 else if (strcmp(sing_index_node->left_child->symbol,"VAR_ID")==0)
-                {//9
+                {
                   // Dynamic
                   declare_type.rectType = RECTSTATUS_DYNAMIC;
                   declare_type.type_expression.array.r.highs[declare_type.type_expression.array.r.dimension_count-1]=0;
@@ -271,7 +271,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                   // Check Type error
                   TypeExpressionRecord var_ter = getTypeExpressionRecord(E,sing_index_node->left_child->lexeme);
                   if(var_ter.type_expression.t != TYPE_INTEGER)
-                  {//10
+                  {
                     printf("**ERROR**\n");
                     printf("Line Number: %zu\n",sing_index_node->left_child->line_number);
                     printf("Statement Type: Declaration\n");
@@ -280,21 +280,20 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                     //statements.
                     printf("Depth:%zu\n",sing_index_node->left_child->depth);
                     printf("Array ranges must be an integer\n");
-                  }//10
-                }//9
+                  }
+                }
 
                 // BREAK HERE
                 break;
               }//8
               sing_index_node = sing_index_node->right_sibling;
-            }//7
+          }//7
 
             // Check the next dimension!
             if (dim_node->right_sibling != NULL)
               dim_node = dim_node->right_sibling->left_child; //**added left_child to keep dim_node on <dimension>**
           }//6
         }//5
-
         else if(strcmp(array_node->left_child->symbol,"<jagged_array>")==0)
         {//5
           // This is a jagged array
@@ -519,10 +518,9 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
           }//6
         }//5
       }//4
-      else
-      {//4
-        if (strcmp(head->symbol,"<var_declaration>")==0)
-        {//5
+    }
+    else if (strcmp(head->symbol,"<var_declaration>")==0)
+    {//5
           if (strcmp(head->left_child->symbol,"VAR_ID")==0)
           {//6
             // Collect these variables
@@ -565,10 +563,8 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
             }//7
           }//6
         }//5
-      }//4
-    }//3
     head = head->right_sibling;
-  }//2
+  }//4
 
   for(size_t i = incoming_size; i < E->size; i++)
   {//2
