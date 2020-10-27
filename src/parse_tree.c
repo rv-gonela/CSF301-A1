@@ -197,6 +197,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
           // This is a rectangular array
           declare_type.arrayType = VARCLASS_RECTANGULAR;
           declare_type.type_expression.t = TYPE_RECTANGULAR_ARRAY;
+          declare_type.type_expression.array.r.basic_element_type = TYPE_INTEGER;
 
           // Find the indices
           ParseTreeNode* dim_node = array_node->left_child->left_child->right_sibling->left_child; // Now it points at the dimension in the rhs of rect_dimension_list//** changed array_node->left_child->right_sibling to left_child->left_child->right_sibling->left_child**
@@ -299,6 +300,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
           declare_type.arrayType = VARCLASS_JAGGED;
           declare_type.rectType = RECTSTATUS_NOT_APPLICABLE;
           declare_type.type_expression.t = TYPE_JAGGED_ARRAY; //**changed from TYPE_RECTANGULAR_ARRAY**
+          declare_type.type_expression.array.j.basic_element_type = TYPE_INTEGER;
 
           // TODO: parse expression for jagged array
           ParseTreeNode* jagged_dimension_list = array_node->left_child->left_child->right_sibling->right_sibling;
@@ -324,6 +326,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
             int temp_high=declare_type.type_expression.array.j.range_R1[1];
             int temp_low=declare_type.type_expression.array.j.range_R1[0];
             declare_type.type_expression.array.j.range_R2 = (RangeR2Item*)malloc(sizeof(RangeR2Item)*(temp_high-temp_low+1));
+            int range_r2_item_index=0;
             while(1){
               ParseTreeNode* jagged_size=jagged_assignment->left_child;
               int temp_size;
@@ -337,7 +340,14 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                 jagged_size=jagged_size->right_sibling; //**pointing to list_integer_list in rhs of jagged_assignment**
               }
               ParseTreeNode* integer_list = jagged_size->left_child;
-              if(integer_list->right_sibling)
+              //**TODO check ranges[i]=1 for all range_R2.ranges[i]** if true, then store else throw error and don't store**
+              declare_type.type_expression.array.j.range_R2[range_r2_item_index].length=temp_size;
+              declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges=(int*)malloc(sizeof(int)*temp_size);
+              for (int i=0; i<temp_size)
+              {
+                declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[i]=1;
+              }
+              range_r2_item_index++;
               if(jagged_assignment->right_sibling != NULL){
                 jagged_assignment=jagged_assignment->right_sibling->left_child;
               }
