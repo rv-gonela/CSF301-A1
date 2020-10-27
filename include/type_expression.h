@@ -48,11 +48,13 @@ typedef struct{
   enum Type basic_element_type;
 } RectArray;
 
+typedef union{
+  JaggedArray j;
+  RectArray r;
+} Array;
+
 typedef struct{
-  union {
-    JaggedArray j;
-    RectArray r;
-  } array;
+  Array array;
   enum Type t;
 } TypeExpression;
 
