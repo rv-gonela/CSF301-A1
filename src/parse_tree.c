@@ -285,17 +285,17 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
 
                 // BREAK HERE
                 break;
-              }//8
+              }
               sing_index_node = sing_index_node->right_sibling;
-          }//7
+          }
 
             // Check the next dimension!
             if (dim_node->right_sibling != NULL)
               dim_node = dim_node->right_sibling->left_child; //**added left_child to keep dim_node on <dimension>**
-          }//6
-        }//5
+          }
+        }
         else if(strcmp(array_node->left_child->symbol,"<jagged_array>")==0)
-        {//5
+        {
           // This is a jagged array
           declare_type.arrayType = VARCLASS_JAGGED;
           declare_type.rectType = RECTSTATUS_NOT_APPLICABLE;
@@ -321,58 +321,58 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
           int range_r2_item_index=0;
 
           if(jagged_dimension->left_child->right_sibling->right_sibling != NULL)
-          {//6
+          {
             declare_type.type_expression.array.j.dimension_count=3;
             //**TODO: PARSE 3d jagged array
 
             while(1)
-            {//7
+            {
               ParseTreeNode* jagged_size=jagged_assignment->left_child;
               int temp_size;
               while(strcmp(jagged_size->symbol,"INTEGER_LITERAL")!=0)
-              {//8
+              {
                 jagged_size=jagged_size->right_sibling;
-              }//8
+              }
               temp_size=strtol(jagged_size->lexeme,NULL,10);
               declare_type.type_expression.array.j.range_R2[range_r2_item_index].length=temp_size;
               declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges=(int*)malloc(sizeof(int)*temp_size);
               while(jagged_size->symbol!=NULL && strcmp(jagged_size->symbol,"<list_integer_list>")!=0)
-              {//8
+              {
                 jagged_size=jagged_size->right_sibling; //**pointing to list_integer_list in rhs of jagged_assignment**
-              }//8
+              }
               if(jagged_size->symbol==NULL)
-              {//8
+              {
                 //**TODO: error for nothing between curly braces
                 printf("Error: nothing between curly braces\n");
-              }//8
+              }
               else
-              {//8
+              {
                 ParseTreeNode* integer_list = jagged_size->left_child; //**pointing to semicolon or integer list in the lhs of list_integer_list
                 for(int int_list_index=0; int_list_index<temp_size; int_list_index++)
-                {//9
+                {
                   //parsing list_integer_list
 
                   if(strcmp(integer_list->symbol, "SEMICOLON")==0)
-                  {//10
+                  {
                     declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = 0;
                     //**TODO: error for 3D JA size mismatch
                     if(integer_list->right_sibling !=NULL)
-                    {//11
+                    {
                       integer_list=integer_list->right_sibling->left_child;
-                    }//11
+                    }
                     else
-                    {//11
+                    {
                       break;
-                    }//11
+                    }
 
-                  }//10
+                  }
                   else
-                  {//10
+                  {
 
                     ParseTreeNode* integer = integer_list->left_child;
                     int temp_count = 0;
                     while(strcmp(integer->symbol, "INTEGER_LITERAL")==0)
-                    {//11
+                    {
                       temp_count++;
                       if(integer->right_sibling !=NULL)
                       {
@@ -382,93 +382,93 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                       {
                         break;
                       }
-                    }//11
+                    }
 
                     declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = temp_count;
 
                     if(integer_list->right_sibling != NULL)
-                    {//11
+                    {
                       integer_list = integer_list-> right_sibling->right_sibling->left_child;
-                    }//11
+                    }
                     else if(int_list_index<temp_size-1)
-                    {//11
+                    {
                       printf("Error: too less number of integer lists\n");
                       //**TODO: Print error for too less number of integer lists
                       break;
-                    }//11
-                  }//10
+                    }
+                  }
 
-                }//9
+                }
                 if(integer_list->right_sibling !=NULL)
-                {//9
+                {
                   printf("Error: too many integer lists\n");
                   //TODO: Error for having too many integer lists.
-                }//9
-              }//8
+                }
+              }
               range_r2_item_index++;
               if(jagged_assignment->right_sibling != NULL)
-              {//8
+              {
                 jagged_assignment=jagged_assignment->right_sibling->left_child;
-              }//8
+              }
               else
-              {//8
+              {
                 break;
-              }//8
-            }//7
-          }//6
+              }
+            }
+          }
           else
-          {//6
+          {
             declare_type.type_expression.array.j.dimension_count=2;
             //**TODO: PARSE 2d jagged array
 
             while(1)
-            {//7
+            {
               ParseTreeNode* jagged_size=jagged_assignment->left_child;
               int temp_size;
               while(strcmp(jagged_size->symbol,"INTEGER_LITERAL")!=0)
-              {//8
+              {
                 jagged_size=jagged_size->right_sibling;
-              }//8
+              }
               temp_size=strtol(jagged_size->lexeme,NULL,10);
               declare_type.type_expression.array.j.range_R2[range_r2_item_index].length=temp_size;
               declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges=(int*)malloc(sizeof(int)*temp_size);
               while(jagged_size->symbol!=NULL && strcmp(jagged_size->symbol,"<list_integer_list>")!=0)
-              {//8
+              {
                 jagged_size=jagged_size->right_sibling; //**pointing to list_integer_list in rhs of jagged_assignment**
-              }//8
+              }
               if(jagged_size->symbol==NULL)
-              {//8
+              {
                 printf("Error: nothing between curly braces\n");
                 //**TODO: error for nothing between curly braces
-              }//8
+              }
               else
-              {//8
+              {
                 ParseTreeNode* integer_list = jagged_size->left_child; //**pointing to semicolon or integer list in the lhs of list_integer_list
                 for(int int_list_index=0; int_list_index<temp_size; int_list_index++)
-                {//9
+                {
                   //parsing list_integer_list
 
                   if(strcmp(integer_list->symbol, "SEMICOLON")==0)
-                  {//10
+                  {
                     declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = 0;
                     //**TODO: error for 2D JA size mismatch
                     if(integer_list->right_sibling !=NULL)
-                    {//11
+                    {
                       integer_list=integer_list->right_sibling->left_child;
-                    }//11
+                    }
                     else
-                    {//11
+                    {
                       break;
-                    }//11
+                    }
 
-                  }//10
+                  }
                   else
-                  {//10
+                  {
 
                     ParseTreeNode* integer = integer_list->left_child;
                     int temp_count = 0;
                     while(strcmp(integer->symbol, "INTEGER_LITERAL")==0)
-                    {//11
+                    {
                       temp_count++;
                       if(integer->right_sibling !=NULL)
                       {
@@ -478,7 +478,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                       {
                         break;
                       }
-                    }//11
+                    }
                     if(temp_count>1)
                     {
                       //TODO: type definition error for 2D jagged array
@@ -487,96 +487,96 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                     declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = 1;
 
                     if(integer_list->right_sibling != NULL)
-                    {//11
+                    {
                       integer_list = integer_list-> right_sibling->right_sibling->left_child;
-                    }//11
+                    }
                     else if(int_list_index<temp_size-1)
-                    {//11
+                    {
                       //**TODO: Print error for too less number of integer lists
                       printf("Error: too less number of integer lists\n");
                       break;
-                    }//11
-                  }//10
+                    }
+                  }
 
-                }//9
+                }
                 if(integer_list->right_sibling !=NULL)
-                {//9
+                {
                   //TODO: Error for having too many integer lists.
                   printf("Error: too less number of integer lists\n");
-                }//9
-              }//8
+                }
+              }
               range_r2_item_index++;
               if(jagged_assignment->right_sibling != NULL)
-              {//8
+              {
                 jagged_assignment=jagged_assignment->right_sibling->left_child;
-              }//8
+              }
               else
-              {//8
+              {
                 break;
-              }//8
-            }//7
-          }//6
-        }//5
-      }//4
+              }
+            }
+          }
+        }
+      }
     }
     else if (strcmp(head->symbol,"<var_declaration>")==0)
-    {//5
+    {
           if (strcmp(head->left_child->symbol,"VAR_ID")==0)
-          {//6
+          {
             // Collect these variables
             E->T[E->size++].var_name = head->left_child->lexeme;
 
             // If we are out of space, we need to reallocate.
             if (E->size==E->capacity)
-            {//7
+            {
               E->capacity *= 2;
               E->T = realloc(E->T,E->capacity*sizeof(TypeExpressionRecord));
-            }//7
-          }//6
+            }
+          }
           else if (strcmp(head->left_child->symbol,"<var_list>"))
-          {//6
+          {
             // List of variables
             ParseTreeNode* var_list_node = head->left_child->left_child;
             while(var_list_node != NULL)
-            {//7
+            {
               if(strcmp(var_list_node->symbol,"<var_id_list>")==0)
                 break;
-            }//7
+            }
             while(var_list_node != NULL)
-            {//7
+            {
               var_list_node = var_list_node->left_child;
 
               if (strcmp(var_list_node->symbol,"VAR_ID")==0)
-              {//8
+              {
                 // Collect these variables
                 E->T[E->size++].var_name = var_list_node->lexeme;
 
                 // If we are out of space, we need to reallocate.
                 if (E->size==E->capacity)
-                {//9
+                {
                   E->capacity *= 2;
                   E->T = realloc(E->T,E->capacity*sizeof(TypeExpressionRecord));
-                }//9
-              }//8
+                }
+              }
 
               var_list_node = var_list_node->right_sibling;
-            }//7
-          }//6
-        }//5
+            }
+          }
+        }
     head = head->right_sibling;
-  }//4
+  }
 
   for(size_t i = incoming_size; i < E->size; i++)
-  {//2
+  {
     char* name = E->T[i].var_name;
     E->T[i] = declare_type;
     E->T[i].var_name = name;
-  }//2
+  }
 
   // Recurse on the next statement
   if (root->right_sibling != NULL)
     populateExpTable(root->right_sibling,E);
-}//1
+}
 
 void validateArrayId(ParseTreeNode* array_node, TypeExpressionTable* E)
 {

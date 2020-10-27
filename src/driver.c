@@ -22,6 +22,7 @@ int main()
   E->size = 0;
   E->T = malloc(E->capacity*sizeof(TypeExpressionRecord));
   traverseParseTree(t,E);
+  printTypeExpressionTable(*E);
 
   free(s);
   free(G);

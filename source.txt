@@ -1,7 +1,7 @@
 program ()
 {
   declare v1 : integer ;
-  declare v2 : integer ;
+  declare v2 : real ;
   v1 = 3 ;
   v2 = 4 ;
   v1 = v1 + v2 ;
