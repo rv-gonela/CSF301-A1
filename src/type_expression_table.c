@@ -1,7 +1,8 @@
 #include "type_expression_table.h"
 
-void printTypeExpressionTable(TypeExpressionTable T){
-  for(int i=0;i<T.size;i++)
+void printTypeExpressionTable(TypeExpressionTable Te){
+  TypeExpressionRecord* T=Te.T;
+  for(int i=0;i<Te.size;i++)
   {
     printf("%-24s", T[i].var_name);
     printf("%-15s", var_class_map[T[i].arrayType]);
@@ -12,7 +13,7 @@ void printTypeExpressionTable(TypeExpressionTable T){
     {
       if(T[i].type_expression.t==1)
       {
-        rectArray r=T[i].type_expression.array.r;
+        RectArray r=T[i].type_expression.array.r;
         printf(", dimensions=%d, ", r.dimension_count);
         for(int dim=1; dim<=r.dimension_count; dim++)
         {
@@ -21,18 +22,18 @@ void printTypeExpressionTable(TypeExpressionTable T){
       }
       else
       {
-        jaggedArray j=T[i].type_expression.array.j;
+        JaggedArray j=T[i].type_expression.array.j;
         printf(", dimensions=%d, ", j.dimension_count);
         printf("range_R1= (%d,%d), ", j.range_R1[0], j.range_R1[1]);
-        int temcountp=j.range_R1[1] - j.range_R1[0] + 1;
+        int count=j.range_R1[1] - j.range_R1[0] + 1;
         printf("range_R2= (");
         if(j.dimension_count==2)
         {
           for(int dim = 0; dim < count-1; dim++)
           {
-            printf("%d, ", j.range_R2[dim].ranges[0]);
+            printf("%d, ", j.range_R2[dim].length);
           }
-          printf("%d", j.range_R2[count-1].ranges[0]);
+          printf("%d", j.range_R2[count-1].length);
         }
         else
         {

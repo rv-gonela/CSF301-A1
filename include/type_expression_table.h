@@ -19,7 +19,7 @@ typedef struct {
   size_t capacity;
 } TypeExpressionTable;
 
-void printTypeExpressionTable(TypeExpressionTable T);
+void printTypeExpressionTable(TypeExpressionTable Te);
 
 TypeExpressionRecord getTypeExpressionRecord(TypeExpressionTable* E, char* var_name);
 

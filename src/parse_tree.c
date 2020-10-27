@@ -336,7 +336,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
               }//8
               temp_size=strtol(jagged_size->lexeme,NULL,10);
               declare_type.type_expression.array.j.range_R2[range_r2_item_index].length=temp_size;
-              declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges=(int*)malloc(sizeof(int)*temp_size)
+              declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges=(int*)malloc(sizeof(int)*temp_size);
               while(jagged_size->symbol!=NULL && strcmp(jagged_size->symbol,"<list_integer_list>")!=0)
               {//8
                 jagged_size=jagged_size->right_sibling; //**pointing to list_integer_list in rhs of jagged_assignment**
@@ -389,7 +389,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
 
                     if(integer_list->right_sibling != NULL)
                     {//11
-                      integer_list = integer_list-> right_sibling->right_sibling->left_child
+                      integer_list = integer_list-> right_sibling->right_sibling->left_child;
                     }//11
                     else if(int_list_index<temp_size-1)
                     {//11
@@ -432,7 +432,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
               }//8
               temp_size=strtol(jagged_size->lexeme,NULL,10);
               declare_type.type_expression.array.j.range_R2[range_r2_item_index].length=temp_size;
-              declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges=(int*)malloc(sizeof(int)*temp_size)
+              declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges=(int*)malloc(sizeof(int)*temp_size);
               while(jagged_size->symbol!=NULL && strcmp(jagged_size->symbol,"<list_integer_list>")!=0)
               {//8
                 jagged_size=jagged_size->right_sibling; //**pointing to list_integer_list in rhs of jagged_assignment**
@@ -489,7 +489,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
 
                     if(integer_list->right_sibling != NULL)
                     {//11
-                      integer_list = integer_list-> right_sibling->right_sibling->left_child
+                      integer_list = integer_list-> right_sibling->right_sibling->left_child;
                     }//11
                     else if(int_list_index<temp_size-1)
                     {//11
