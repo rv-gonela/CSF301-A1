@@ -357,6 +357,100 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
 // TODO
 void validateParseTree(ParseTreeNode* root, TypeExpressionTable* E)
 {
+  // Sanity check
+  if(strcmp(root->symbol,"<assignment_list>"))
+    return;
+
+  root = root->left_child; // Go to the assignment statement
+  TypeExpressionRecord lhs_record;
+
+  ParseTreeNode* assignment_node = root->left_child;
+  while(assignment_node !=  NULL)
+  {
+    if (strcmp(assignment_node->symbol,"<assign_var>")==0)
+    {
+      // This is the LHS
+
+      if(strcmp(assignment_node->left_child->symbol,"VAR_ID")==0)
+      {
+        // This is just a normal variable
+        lhs_record = getTypeExpressionRecord(E,assignment_node->left_child->lexeme);
+      }
+      else if (strcmp(assignment_node->left_child->symbol,"<arr_id>")==0)
+      {
+        // This is an array **weep**
+        ParseTreeNode* array_node = assignment_node->left_child;
+        lhs_record = getTypeExpressionRecord(E,array_node->left_child->lexeme);
+
+        // Make sure index accesses are good
+        ParseTreeNode* index_node = array_node->left_child->right_sibling->right_sibling;
+        int dim_index = 0;
+        while(1)
+        {
+          index_node = index_node->left_child;
+          if (strcmp(index_node->left_child->symbol,"INTEGER_LITERAL")==0)
+          {
+            int index_value = strtol(index_node->left_child->lexeme,NULL,10);
+
+            if (lhs_record.type_expression.t==TYPE_RECTANGULAR_ARRAY)
+            {
+              // It is a rectangular array, access it as such
+              if (index_value < lhs_record.type_expression.array.r.lows[dim_index] || index_value > lhs_record.type_expression.array.r.highs[dim_index])
+              {
+                // IndexOutOfBoundsAccess
+                printf("**ERROR**\n");
+                printf("Line number: %zu\n",index_node->left_child->line_number);
+                printf("Statement type: Assignment\n");
+                printf("Operator: Index access\n");
+                printf("Depth: %zu\n",index_node->left_child->depth);
+                printf("Index access in dimension %d must be between %d and %d\n",dim_index,lhs_record.type_expression.array.r.lows[dim_index],lhs_record.type_expression.array.r.highs[dim_index]);
+                return;
+              }
+            }
+            else if (lhs_record.type_expression.t == TYPE_JAGGED_ARRAY)
+            {
+              // TODO: It is a jagged array, access it as such
+            }
+          }
+          else if (strcmp(index_node->left_child->symbol,"VAR_ID")==0)
+          {
+            TypeExpressionRecord index_record = getTypeExpressionRecord(E,index_node->left_child->lexeme);
+            if (index_record.type_expression.t!=TYPE_INTEGER)
+            {
+              printf("**ERROR**\n");
+              printf("Line Number: %zu\n",index_node->left_child->line_number);
+              printf("Statement Type: Assignment\n");
+              printf("Operator: Index access\n");
+              //TODO: The desired output only makes sense in assignment
+              //statements.
+              printf("Depth:%zu\n",index_node->left_child->depth);
+              printf("Array ranges must be an integer\n");
+              return;
+            }
+          }
+
+          if (index_node->right_sibling==NULL) // Reached the end of the index list
+            break;
+
+          index_node = index_node->right_sibling;
+          dim_index++;
+        }
+      }
+    }
+    else if (strcmp(assignment_node->symbol,"<expression>"))
+    {
+      // This is the RHS QwQ
+      
+    }
+
+    assignment_node = assignment_node->right_sibling;
+  }
+  
+
+  if(root->right_sibling != NULL)
+  {
+    validateParseTree(root->right_sibling,E);
+  }
 }
 
 void traverseParseTree(ParseTree* t, TypeExpressionTable* E)
