@@ -313,15 +313,18 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
           declare_type.type_expression.array.j.range_R1[1] = index_value;
           ParseTreeNode* jagged_dimension = first_dim->right_sibling;
           ParseTreeNode* jagged_assign_list = jagged_dimension_list->right_sibling->right_sibling->right_sibling->right_sibling;
+
+          ParseTreeNode* jagged_assignment = jagged_assign_list->left_child;
+          int temp_high=declare_type.type_expression.array.j.range_R1[1];
+          int temp_low=declare_type.type_expression.array.j.range_R1[0];
+          declare_type.type_expression.array.j.range_R2 = (RangeR2Item*)malloc(sizeof(RangeR2Item)*(temp_high-temp_low+1));
+          int range_r2_item_index=0;
+
           if(jagged_dimension->left_child->right_sibling->right_sibling != NULL)
           {
             declare_type.type_expression.array.j.dimension_count=3;
             //**TODO: PARSE 3d jagged array
-            ParseTreeNode* jagged_assignment = jagged_assign_list->left_child;
-            int temp_high=declare_type.type_expression.array.j.range_R1[1];
-            int temp_low=declare_type.type_expression.array.j.range_R1[0];
-            declare_type.type_expression.array.j.range_R2 = (RangeR2Item*)malloc(sizeof(RangeR2Item)*(temp_high-temp_low+1));
-            int range_r2_item_index=0;
+
             while(1){
               ParseTreeNode* jagged_size=jagged_assignment->left_child;
               int temp_size;
@@ -342,11 +345,6 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
           {
             declare_type.type_expression.array.j.dimension_count=2;
             //**TODO: PARSE 2d jagged array
-            ParseTreeNode* jagged_assignment = jagged_assign_list->left_child;
-            int temp_high=declare_type.type_expression.array.j.range_R1[1];
-            int temp_low=declare_type.type_expression.array.j.range_R1[0];
-            declare_type.type_expression.array.j.range_R2 = (RangeR2Item*)malloc(sizeof(RangeR2Item)*(temp_high-temp_low+1));
-            int range_r2_item_index=0;
             while(1){
               ParseTreeNode* jagged_size=jagged_assignment->left_child;
               int temp_size;
