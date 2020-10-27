@@ -200,7 +200,6 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
           while(1)
           {
             declare_type.type_expression.array.r.dimension_count++;
-            //DONE TODO: Allocate more space for the newest range
             if(declare_type.type_expression.array.r.dimension_count==1)
             {
               declare_type.type_expression.array.r.lows=(int*)malloc(sizeof(int));
@@ -211,7 +210,6 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
               declare_type.type_expression.array.r.lows=(int*)realloc(declare_type.type_expression.array.r.lows, sizeof(int)*declare_type.type_expression.array.r.dimension_count);
               declare_type.type_expression.array.r.highs=(int*)realloc(declare_type.type_expression.array.r.highs, sizeof(int)*declare_type.type_expression.array.r.dimension_count);
             }
-            //**removed dim_node = dim_node->left_child;
             // We are now pointing to a single indexing dimension
             ParseTreeNode* sing_index_node = dim_node->left_child;//**sing_index_node i spointing to RECT_OPEN**
             while(sing_index_node != NULL)
@@ -225,9 +223,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                   if (declare_type.rectType != RECTSTATUS_DYNAMIC)
                     declare_type.rectType = RECTSTATUS_STATIC;
 
-                  //DONE TODO:Store the index values
-                  int index_value = strtol(sing_index_node->lexeme,NULL,10); // Beware, for I have never used this function before
-
+                  int index_value = strtol(sing_index_node->lexeme,NULL,10);
                   declare_type.type_expression.array.r.lows[declare_type.type_expression.array.r.dimension_count-1];
 
                 }
@@ -236,8 +232,20 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                   // Dynamic
                   declare_type.rectType = RECTSTATUS_DYNAMIC;
                   declare_type.type_expression.array.r.highs[declare_type.type_expression.array.r.dimension_count-1]=0;
-                  //DONE TODO:Store the index values
-                  //**TODO: Check for type error**
+                  
+                  // Check for type error
+                  TypeExpressionRecord var_ter = getTypeExpressionRecord(E,sing_index_node->left_child->lexeme);
+                  if(var_ter.type_expression.t != TYPE_INTEGER)
+                  {
+                    printf("**ERROR**\n");
+                    printf("Line Number: %zu\n",sing_index_node->left_child->line_number);
+                    printf("Statement Type: Declaration\n");
+                    printf("Operator: Index access\n");
+                    //TODO: The desired output only makes sense in assignment
+                    //statements.
+                    printf("Depth:%zu\n",sing_index_node->left_child->depth);
+                    printf("Array ranges must be an integer\n");
+                  }
                 }
                 //for high
                 sing_index_node=sing_index_node->right_sibling->right_sibling;
@@ -247,9 +255,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                   if (declare_type.rectType != RECTSTATUS_DYNAMIC)
                     declare_type.rectType = RECTSTATUS_STATIC;
 
-                  //DONE TODO:Store the index values
-                  int index_value = strtol(sing_index_node->lexeme,NULL,10); // Beware, for I have never used this function before
-
+                  int index_value = strtol(sing_index_node->lexeme,NULL,10);
                   declare_type.type_expression.array.r.highs[declare_type.type_expression.array.r.dimension_count-1]=index_value;
 
                 }
@@ -258,9 +264,24 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                   // Dynamic
                   declare_type.rectType = RECTSTATUS_DYNAMIC;
                   declare_type.type_expression.array.r.highs[declare_type.type_expression.array.r.dimension_count-1]=0;
-                  // DONE TODO:Store the index values
-                  //**TODO: Check for type error**
+
+                  // Check Type error
+                  TypeExpressionRecord var_ter = getTypeExpressionRecord(E,sing_index_node->left_child->lexeme);
+                  if(var_ter.type_expression.t != TYPE_INTEGER)
+                  {
+                    printf("**ERROR**\n");
+                    printf("Line Number: %zu\n",sing_index_node->left_child->line_number);
+                    printf("Statement Type: Declaration\n");
+                    printf("Operator: Index access\n");
+                    //TODO: The desired output only makes sense in assignment
+                    //statements.
+                    printf("Depth:%zu\n",sing_index_node->left_child->depth);
+                    printf("Array ranges must be an integer\n");
+                  }
                 }
+
+                // BREAK HERE
+                break;
               }
               sing_index_node = sing_index_node->right_sibling;
             }

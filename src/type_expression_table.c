@@ -58,3 +58,16 @@ void printTypeExpressionTable(typeExpressionTable T){
   }
   return;
 }
+
+TypeExpressionRecord getTypeExpressionRecord(TypeExpressionTable* E, char* var_name)
+{
+  TypeExpressionRecord ret_value;
+  for (int i = 0; i < E->size; i++)
+  {
+    if (strcmp(E->T[i].var_name,var_name)==0)
+    {
+      return E->T[i];
+    }
+  }
+  return ret_value;
+}

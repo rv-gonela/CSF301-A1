@@ -21,4 +21,6 @@ typedef struct {
 
 void printTypeExpressionTable(TypeExpressionTable T);
 
+TypeExpressionRecord getTypeExpressionRecord(TypeExpressionTable* E, char* var_name);
+
 #endif
