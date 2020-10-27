@@ -3,16 +3,16 @@
 void printTypeExpressionTable(TypeExpressionTable T){
   for(int i=0;i<T.size;i++)
   {
-    printf("%-24s", T[i].field1);
-    printf("%-15s", var_class_map[T[i].field2]);
-    printf("%-18s", rect_status_map[T[i].field3]);
+    printf("%-24s", T[i].var_name);
+    printf("%-15s", var_class_map[T[i].arrayType]);
+    printf("%-18s", rect_status_map[T[i].rectType]);
     printf("<type =");
-    printf("%s", type_map[T[i].field4.t]);
-    if(T[i].field2!=0)
+    printf("%s", type_map[T[i].type_expression.t]);
+    if(T[i].arrayType!=0)
     {
-      if(T[i].field4.t==1)
+      if(T[i].type_expression.t==1)
       {
-        rectArray r=T[i].field4.array.r;
+        rectArray r=T[i].type_expression.array.r;
         printf(", dimensions=%d, ", r.dimension_count);
         for(int dim=1; dim<=r.dimension_count; dim++)
         {
@@ -21,7 +21,7 @@ void printTypeExpressionTable(TypeExpressionTable T){
       }
       else
       {
-        jaggedArray j=T[i].field4.array.j;
+        jaggedArray j=T[i].type_expression.array.j;
         printf(", dimensions=%d, ", j.dimension_count);
         printf("range_R1= (%d,%d), ", j.range_R1[0], j.range_R1[1]);
         int temcountp=j.range_R1[1] - j.range_R1[0] + 1;

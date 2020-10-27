@@ -344,6 +344,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
               if(jagged_size->symbol==NULL)
               {//8
                 //**TODO: error for nothing between curly braces
+                printf("Error: nothing between curly braces\n");
               }//8
               else
               {//8
@@ -392,6 +393,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                     }//11
                     else if(int_list_index<temp_size-1)
                     {//11
+                      printf("Error: too less number of integer lists\n");
                       //**TODO: Print error for too less number of integer lists
                       break;
                     }//11
@@ -400,6 +402,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                 }//9
                 if(integer_list->right_sibling !=NULL)
                 {//9
+                  printf("Error: too many integer lists\n");
                   //TODO: Error for having too many integer lists.
                 }//9
               }//8
@@ -436,6 +439,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
               }//8
               if(jagged_size->symbol==NULL)
               {//8
+                printf("Error: nothing between curly braces\n");
                 //**TODO: error for nothing between curly braces
               }//8
               else
@@ -479,6 +483,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                     if(temp_count>1)
                     {
                       //TODO: type definition error for 2D jagged array
+                      printf("Error: Type definition error for 2D jagged array.\n");
                     }
                     declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = 1;
 
@@ -489,6 +494,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                     else if(int_list_index<temp_size-1)
                     {//11
                       //**TODO: Print error for too less number of integer lists
+                      printf("Error: too less number of integer lists\n");
                       break;
                     }//11
                   }//10
@@ -497,6 +503,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                 if(integer_list->right_sibling !=NULL)
                 {//9
                   //TODO: Error for having too many integer lists.
+                  printf("Error: too less number of integer lists\n");
                 }//9
               }//8
               range_r2_item_index++;
