@@ -78,6 +78,7 @@ int fillParseTree(ParseTreeNode* root, TokenStreamNode** head, Grammar* G)
         }
         else
         {
+          root->line_number = root->left_child->line_number;
           root->grammar_rule = G->grammar_lhs[i];
           break;
         }
@@ -460,7 +461,7 @@ void validateExpression(ParseTreeNode* expression_root, TypeExpressionTable* E)
     if(!isTEEqual(term1->type_expression, term2->type_expression))
     {
       printf("**ERROR**\n");
-      printf("Line Number: %zu\n",expression_root->line_number); // TODO: fill line numbers for the entire parse tree
+      printf("Line Number: %zu\n",expression_root->line_number);
       printf("Statement type: Assignment\n");
       printf("Operator: %s\n",operation);
       // TODO: print type
