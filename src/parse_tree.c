@@ -39,7 +39,7 @@ int fillParseTree(ParseTreeNode* root, TokenStreamNode** head, Grammar* G)
   TokenStreamNode* savedHead = *head; // Save the head to revert if things go wrong
 
   // If it is a terminal, make sure it matches the token!
-  if (symbol[0]!='<' && strcmp(symbol,"EPSILON")==0)
+  if (symbol[0]!='<' && strcmp(symbol,"EPSILON")!=0)
   {
     if (strcmp(tokenToSymbolMap[(*head)->token_type],symbol)==0)
     {
