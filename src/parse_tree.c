@@ -478,6 +478,10 @@ void validateExpression(ParseTreeNode* expression_root, TypeExpressionTable* E)
     expression_root->type_expression = getTypeExpressionRecord(E,expression_root->left_child->lexeme).type_expression;
     validateArrayId(expression_root,E);
   }
+  else if (strcmp(expression_root->symbol,"INTEGER_LITERAL")==0)
+  {
+    expression_root->type_expression.t = TYPE_INTEGER;
+  }
   else if (strcmp(expression_root->symbol,"VAR_ID")==0)
   {
     expression_root->type_expression = getTypeExpressionRecord(E,expression_root->lexeme).type_expression;
@@ -485,9 +489,14 @@ void validateExpression(ParseTreeNode* expression_root, TypeExpressionTable* E)
   else
   {
     ParseTreeNode* term1 = expression_root->left_child;
-    ParseTreeNode* term2 = expression_root->left_child->right_sibling->right_sibling;
     validateExpression(term1,E); // First term
-    validateExpression(term2,E); // Second term
+    if(expression_root->left_child->right_sibling==NULL) // There is ony one term!
+    {
+      expression_root->type_expression = term1->type_expression;
+      return;
+    }
+    ParseTreeNode* term2 = expression_root->left_child->right_sibling->right_sibling;
+    validateExpression(term2,E); // Second term THIS MAY NOT EXIST. CHECK IF IT DOES!!
 
     char* operation = expression_root->left_child->right_sibling->left_child->symbol; // Operation
 
@@ -601,25 +610,25 @@ void validateParseTree(ParseTreeNode* root, TypeExpressionTable* E)
         validateArrayId(array_node,E);
       }
     }
-    else if (strcmp(assignment_node->symbol,"<expression>"))
+    else if (strcmp(assignment_node->symbol,"<expression>")==0)
     {
       // This is the RHS QwQ
       validateExpression(assignment_node,E);
       rhs_record.type_expression = assignment_node->type_expression;
     }
 
-    if (!isTEEqual(rhs_record.type_expression,lhs_record.type_expression))
-    {
-      printf("**ERROR**\n");
-      printf("Line Number: %zu\n",root->line_number);
-      printf("Statement type: Assignment\n");
-      printf("Operator: =\n");
-      // TODO: print type
-      printf("Depth: %zu\n",root->depth);
-      printf("Assignment must have same type on RHS and LHS\n");
-    }
-
     assignment_node = assignment_node->right_sibling;
+  }
+  
+  if (!isTEEqual(rhs_record.type_expression,lhs_record.type_expression))
+  {
+    printf("**ERROR**\n");
+    printf("Line Number: %zu\n",root->line_number);
+    printf("Statement type: Assignment\n");
+    printf("Operator: =\n");
+    // TODO: print type
+    printf("Depth: %zu\n",root->depth);
+    printf("Assignment must have same type on RHS and LHS\n");
   }
 
   if(root->right_sibling != NULL)
