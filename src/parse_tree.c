@@ -160,7 +160,7 @@ void printParseTree(ParseTree* t)
 }
 //------------------------------------------
 void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
-{
+{//1
   if (strcmp(root->symbol,"<declaration_list>")!=0) // Sanity check
     return;
   root = root->left_child; // Move to the declare statement
@@ -170,12 +170,12 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
   size_t incoming_size = E->size;
   TypeExpressionRecord declare_type;
   while(head != NULL)
-  { //**Here we are not jumping into <var_list> to take into account the variable names.
+  {//2 //**Here we are not jumping into <var_list> to take into account the variable names.
     if (strcmp(head->symbol,"<data_type>")==0)
-    {
+    {//3
       // Populate the type expression with this information
       if(strcmp(head->left_child->symbol,"<primitive>")==0)
-      {
+      {//4
         declare_type.arrayType = VARCLASS_PRIMITIVE;
         declare_type.rectType= RECTSTATUS_NOT_APPLICABLE;
 
@@ -187,13 +187,13 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
           declare_type.type_expression.t = TYPE_REAL;
         else if (strcmp(primitive_node->left_child->symbol,"BOOL")==0)
           declare_type.type_expression.t = TYPE_BOOLEAN;
-      }
+      }//4
       else if (strcmp(head->left_child->symbol,"<array_type>")==0) //**changed array to array_type**
-      {
+      {//4
         // Need to go deeper
         ParseTreeNode* array_node = head->left_child;
         if(strcmp(array_node->left_child->symbol,"<rect_array>")==0)
-        {
+        {//5
           // This is a rectangular array
           declare_type.arrayType = VARCLASS_RECTANGULAR;
           declare_type.type_expression.t = TYPE_RECTANGULAR_ARRAY;
@@ -202,36 +202,36 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
           // Find the indices
           ParseTreeNode* dim_node = array_node->left_child->left_child->right_sibling->left_child; // Now it points at the dimension in the rhs of rect_dimension_list//** changed array_node->left_child->right_sibling to left_child->left_child->right_sibling->left_child**
           while(1)
-          {
+          {//6
             declare_type.type_expression.array.r.dimension_count++;
             if(declare_type.type_expression.array.r.dimension_count==1)
-            {
+            {//7
               declare_type.type_expression.array.r.lows=(int*)malloc(sizeof(int));
               declare_type.type_expression.array.r.highs=(int*)malloc(sizeof(int));
-            }
+            }//7
             else
-            {
+            {//7
               declare_type.type_expression.array.r.lows=(int*)realloc(declare_type.type_expression.array.r.lows, sizeof(int)*declare_type.type_expression.array.r.dimension_count);
               declare_type.type_expression.array.r.highs=(int*)realloc(declare_type.type_expression.array.r.highs, sizeof(int)*declare_type.type_expression.array.r.dimension_count);
-            }
+            }//7
             // We are now pointing to a single indexing dimension
             ParseTreeNode* sing_index_node = dim_node->left_child;//**sing_index_node i spointing to RECT_OPEN**
             while(sing_index_node != NULL)
-            {
+            {//7
               if (strcmp(sing_index_node->left_child->symbol,"<index>")==0)
-              {
+              {//8
                 //**for low**
                 if (strcmp(sing_index_node->left_child->symbol,"INTEGER_LITERAL") == 0)
-                {
+                {//9
                   // Static
                   if (declare_type.rectType != RECTSTATUS_DYNAMIC)
                     declare_type.rectType = RECTSTATUS_STATIC;
 
                   int index_value = strtol(sing_index_node->lexeme,NULL,10);
                   declare_type.type_expression.array.r.lows[declare_type.type_expression.array.r.dimension_count-1] = index_value;
-                }
+                }//9
                 else if (strcmp(sing_index_node->left_child->symbol,"VAR_ID")==0)
-                {
+                {//9
                   // Dynamic
                   declare_type.rectType = RECTSTATUS_DYNAMIC;
                   declare_type.type_expression.array.r.highs[declare_type.type_expression.array.r.dimension_count-1]=0;
@@ -239,7 +239,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                   // Check for type error
                   TypeExpressionRecord var_ter = getTypeExpressionRecord(E,sing_index_node->left_child->lexeme);
                   if(var_ter.type_expression.t != TYPE_INTEGER)
-                  {
+                  {//10
                     printf("**ERROR**\n");
                     printf("Line Number: %zu\n",sing_index_node->left_child->line_number);
                     printf("Statement Type: Declaration\n");
@@ -248,12 +248,12 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                     //statements.
                     printf("Depth:%zu\n",sing_index_node->left_child->depth);
                     printf("Array ranges must be an integer\n");
-                  }
-                }
+                  }//10
+                }//9
                 //for high
                 sing_index_node=sing_index_node->right_sibling->right_sibling;
                 if (strcmp(sing_index_node->left_child->symbol,"INTEGER_LITERAL") == 0)
-                {
+                {//9
                   // Static
                   if (declare_type.rectType != RECTSTATUS_DYNAMIC)
                     declare_type.rectType = RECTSTATUS_STATIC;
@@ -261,9 +261,9 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                   int index_value = strtol(sing_index_node->lexeme,NULL,10);
                   declare_type.type_expression.array.r.highs[declare_type.type_expression.array.r.dimension_count-1]=index_value;
 
-                }
+                }//9
                 else if (strcmp(sing_index_node->left_child->symbol,"VAR_ID")==0)
-                {
+                {//9
                   // Dynamic
                   declare_type.rectType = RECTSTATUS_DYNAMIC;
                   declare_type.type_expression.array.r.highs[declare_type.type_expression.array.r.dimension_count-1]=0;
@@ -271,7 +271,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                   // Check Type error
                   TypeExpressionRecord var_ter = getTypeExpressionRecord(E,sing_index_node->left_child->lexeme);
                   if(var_ter.type_expression.t != TYPE_INTEGER)
-                  {
+                  {//10
                     printf("**ERROR**\n");
                     printf("Line Number: %zu\n",sing_index_node->left_child->line_number);
                     printf("Statement Type: Declaration\n");
@@ -280,22 +280,23 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                     //statements.
                     printf("Depth:%zu\n",sing_index_node->left_child->depth);
                     printf("Array ranges must be an integer\n");
-                  }
-                }
+                  }//10
+                }//9
 
                 // BREAK HERE
                 break;
-              }
+              }//8
               sing_index_node = sing_index_node->right_sibling;
-            }
+            }//7
 
             // Check the next dimension!
             if (dim_node->right_sibling != NULL)
               dim_node = dim_node->right_sibling->left_child; //**added left_child to keep dim_node on <dimension>**
-          }
-        }
+          }//6
+        }//5
+
         else if(strcmp(array_node->left_child->symbol,"<jagged_array>")==0)
-        {
+        {//5
           // This is a jagged array
           declare_type.arrayType = VARCLASS_JAGGED;
           declare_type.rectType = RECTSTATUS_NOT_APPLICABLE;
@@ -321,124 +322,200 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
           int range_r2_item_index=0;
 
           if(jagged_dimension->left_child->right_sibling->right_sibling != NULL)
-          {
+          {//6
             declare_type.type_expression.array.j.dimension_count=3;
             //**TODO: PARSE 3d jagged array
 
-            while(1){
+            while(1)
+            {//7
               ParseTreeNode* jagged_size=jagged_assignment->left_child;
               int temp_size;
               while(strcmp(jagged_size->symbol,"INTEGER_LITERAL")!=0)
-              {
+              {//8
                 jagged_size=jagged_size->right_sibling;
-              }
+              }//8
               temp_size=strtol(jagged_size->lexeme,NULL,10);
-              while(strcmp(jagged_size->symbol,"<list_integer_list>")!=0)
-              {
+              declare_type.type_expression.array.j.range_R2[range_r2_item_index].length=temp_size;
+              declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges=(int*)malloc(sizeof(int)*temp_size)
+
+              while(jagged_size->symbol!=NULL && strcmp(jagged_size->symbol,"<list_integer_list>")!=0)
+              {//8
                 jagged_size=jagged_size->right_sibling; //**pointing to list_integer_list in rhs of jagged_assignment**
-              }
+              }//8
+              if(jagged_size->symbol==NULL)
+              {//8
+                //**TODO: error for nothing between curly braces
+                int trash;
+              }//8
+              else
+              {//8
+                ParseTreeNode* integer_list = jagged_size->left_child; //**pointing to semicolon or integer list in the lhs of list_integer_list
+                for(int int_list_index=0; int_list_index<temp_size; int_list_index++)
+                {//9
+                  //parsing list_integer_list
 
-            }
+                  if(strcmp(integer_list->symbol, "SEMICOLON")==0)
+                  {//10
+                    declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = 0;
+                    //**TODO: error for 3D JA size mismatch
+                    if(integer_list->right_sibling !=NULL)
+                    {//11
+                      integer_list=integer_list->right_sibling->left_child;
+                    }//11
+                    else
+                    {//11
+                      break;
+                    }//11
 
-          }
+                  }//10
+                  else
+                  {//10
+
+                    ParseTreeNode* integer = integer_list->left_child;
+                    int temp_count = 0;
+                    while(strcmp(integer->symbol, "INTEGER_LITERAL")==0)
+                    {//11
+                      temp_count++;
+                      integer = integer->right_sibling->left_child;
+                    }//11
+
+                    declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = temp_count;
+
+                    if(integer_list->right_sibling != NULL)
+                    {//11
+                      integer_list = integer_list-> right_sibling->right_sibling->left_child
+                    }//11
+                    else if(int_list_index<temp_size-1)
+                    {//11
+                      //**TODO: Print error for too less number of integer lists
+                      break;
+                    }//11
+                  }//10
+
+                }//9
+                if(integer_list->right_sibling !=NULL)
+                {//9
+                  //TODO: Error for having too many integer lists.
+                  int trash;
+                }//9
+              }//8
+              range_r2_item_index++;
+              if(jagged_assignment->right_sibling != NULL)
+              {//8
+                jagged_assignment=jagged_assignment->right_sibling->left_child;
+              }//8
+              else
+              {//8
+                break;
+              }//8
+            }//7
+          }//6
           else
-          {
+          {//6
             declare_type.type_expression.array.j.dimension_count=2;
             //**TODO: PARSE 2d jagged array
-            while(1){
+            while(1)
+            {//7
               ParseTreeNode* jagged_size=jagged_assignment->left_child;
               int temp_size;
               while(strcmp(jagged_size->symbol,"INTEGER_LITERAL")!=0)
-              {
+              {//8
                 jagged_size=jagged_size->right_sibling;
-              }
+              }//8
               temp_size=strtol(jagged_size->lexeme,NULL,10);
-              while(strcmp(jagged_size->symbol,"<list_integer_list>")!=0)
-              {
-                jagged_size=jagged_size->right_sibling; //**pointing to list_integer_list in rhs of jagged_assignment**
-              }
-              ParseTreeNode* integer_list = jagged_size->left_child;
-              //**TODO check ranges[i]=1 for all range_R2.ranges[i]** if true, then store else throw error and don't store**
               declare_type.type_expression.array.j.range_R2[range_r2_item_index].length=temp_size;
               declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges=(int*)malloc(sizeof(int)*temp_size);
-              for (int i=0; i<temp_size)
-              {
+              while(jagged_size->symbol!=NULL && strcmp(jagged_size->symbol,"<list_integer_list>")!=0)
+              {//8
+                jagged_size=jagged_size->right_sibling; //**pointing to list_integer_list in rhs of jagged_assignment**
+              }//8
+              if(jagged_size->symbol==NULL)
+              {//8
+                //**TODO: error for nothing between curly braces
+                int trash;
+              }//8
+              ParseTreeNode* integer_list = jagged_size->left_child;
+              //**TODO check ranges[i]=1 for all range_R2.ranges[i]** if true, then store else throw error and don't store**
+
+              for (int i=0; i<temp_size; i++)//Raghu was Reborn a Legend here
+              {//8
                 declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[i]=1;
-              }
+              }//8
               range_r2_item_index++;
-              if(jagged_assignment->right_sibling != NULL){
+              if (jagged_assignment->right_sibling != NULL)
+              {//8
                 jagged_assignment=jagged_assignment->right_sibling->left_child;
-              }
+              }//8
               else
-              {
+              {//8
                 break;
-              }
-            }
-          }
-        }
-      }
-    }
-    else
-    {
-      if (strcmp(head->symbol,"<var_declaration>")==0)
-      {
-        if (strcmp(head->left_child->symbol,"VAR_ID")==0)
-        {
-          // Collect these variables
-          E->T[E->size++].var_name = head->left_child->lexeme;
+              }//8
+            }//7
+          }//6
+        }//5
+      }//4
+      else
+      {//4
+        if (strcmp(head->symbol,"<var_declaration>")==0)
+        {//5
+          if (strcmp(head->left_child->symbol,"VAR_ID")==0)
+          {//6
+            // Collect these variables
+            E->T[E->size++].var_name = head->left_child->lexeme;
 
-          // If we are out of space, we need to reallocate.
-          if (E->size==E->capacity)
-          {
-            E->capacity *= 2;
-            E->T = realloc(E->T,E->capacity*sizeof(TypeExpressionRecord));
-          }
-        }
-        else if (strcmp(head->left_child->symbol,"<var_list>"))
-        {
-          // List of variables
-          ParseTreeNode* var_list_node = head->left_child->left_child;
-          while(var_list_node != NULL)
-          {
-            if(strcmp(var_list_node->symbol,"<var_id_list>")==0)
-              break;
-          }
-          while(var_list_node != NULL)
-          {
-            var_list_node = var_list_node->left_child;
+            // If we are out of space, we need to reallocate.
+            if (E->size==E->capacity)
+            {//7
+              E->capacity *= 2;
+              E->T = realloc(E->T,E->capacity*sizeof(TypeExpressionRecord));
+            }//7
+          }//6
+          else if (strcmp(head->left_child->symbol,"<var_list>"))
+          {//6
+            // List of variables
+            ParseTreeNode* var_list_node = head->left_child->left_child;
+            while(var_list_node != NULL)
+            {//7
+              if(strcmp(var_list_node->symbol,"<var_id_list>")==0)
+                break;
+            }//7
+            while(var_list_node != NULL)
+            {//7
+              var_list_node = var_list_node->left_child;
 
-            if (strcmp(var_list_node->symbol,"VAR_ID")==0)
-            {
-              // Collect these variables
-              E->T[E->size++].var_name = var_list_node->lexeme;
+              if (strcmp(var_list_node->symbol,"VAR_ID")==0)
+              {//8
+                // Collect these variables
+                E->T[E->size++].var_name = var_list_node->lexeme;
 
-              // If we are out of space, we need to reallocate.
-              if (E->size==E->capacity)
-              {
-                E->capacity *= 2;
-                E->T = realloc(E->T,E->capacity*sizeof(TypeExpressionRecord));
-              }
-            }
+                // If we are out of space, we need to reallocate.
+                if (E->size==E->capacity)
+                {//9
+                  E->capacity *= 2;
+                  E->T = realloc(E->T,E->capacity*sizeof(TypeExpressionRecord));
+                }//9
+              }//8
 
-            var_list_node = var_list_node->right_sibling;
-          }
-        }
-      }
-    }
+              var_list_node = var_list_node->right_sibling;
+            }//7
+          }//6
+        }//5
+      }//4
+    }//3
     head = head->right_sibling;
-  }
+  }//2
 
-  for (size_t i = incoming_size; i < E->size; i++)
-  {
+  for(size_t i = incoming_size; i < E->size; i++)
+  {//2
     char* name = E->T[i].var_name;
     E->T[i] = declare_type;
     E->T[i].var_name = name;
-  }
+  }//2
 
   // Recurse on the next statement
   if (root->right_sibling != NULL)
     populateExpTable(root->right_sibling,E);
-}
+}//1
 
 void validateArrayId(ParseTreeNode* array_node, TypeExpressionTable* E)
 {
@@ -647,7 +724,7 @@ void validateParseTree(ParseTreeNode* root, TypeExpressionTable* E)
 
     assignment_node = assignment_node->right_sibling;
   }
-  
+
   if (!isTEEqual(rhs_record.type_expression,lhs_record.type_expression))
   {
     printf("**ERROR**\n");

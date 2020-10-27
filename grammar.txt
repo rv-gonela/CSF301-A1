@@ -29,11 +29,13 @@
 <jagged_assign_list> <jagged_assignment> <jagged_assign_list>
 <jagged_assign_list> <jagged_assignment>
 <jagged_assignment> R1 <access_index> COLON SIZE INTEGER_LITERAL COLON VALUES CURLY_OPEN <list_integer_list> CURLY_CLOSE
+<jagged_assignment> R1 <access_index> COLON SIZE INTEGER_LITERAL COLON VALUES CURLY_OPEN CURLY_CLOSE
 <list_integer_list> <integer_list> SEMICOLON <list_integer_list>
+<list_integer_list> SEMICOLON <list_integer_list>
 <list_integer_list> <integer_list>
+<list_integer_list> SEMICOLON
 <integer_list> INTEGER_LITERAL <integer_list>
 <integer_list> INTEGER_LITERAL
-<integer_list> EPSILON
 <assignment_list> <assignment> <assignment_list>
 <assignment_list> <assignment>
 <assignment> <assign_var> EQUAL_SIGN <expression> SEMICOLON
