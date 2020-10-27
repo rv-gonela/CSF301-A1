@@ -57,7 +57,6 @@ void printTypeExpressionTable(TypeExpressionTable T){
     printf(">\n");
   }
   return;
->>>>>>> db7e639d529a14b66cc31ae7c7783c188e846b74
 }
 
 TypeExpressionRecord getTypeExpressionRecord(TypeExpressionTable* E, char* var_name)
