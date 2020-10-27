@@ -16,7 +16,7 @@ void printTypeExpressionTable(typeExpressionTable T){
         printf(", dimensions=%d, ", r.dimension_count);
         for(int dim=1; dim<=r.dimension_count; dim++)
         {
-          printf("range_R%d= (%d,%d), ", dim, r.ranges[dim-1][0], r.ranges[dim-1][1]);
+          printf("range_R%d= (%d,%d), ", dim, r.lows[dim-1], r.highs[dim-1]);
         }
       }
       else

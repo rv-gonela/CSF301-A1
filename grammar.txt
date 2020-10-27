@@ -33,6 +33,7 @@
 <list_integer_list> <integer_list>
 <integer_list> INTEGER_LITERAL <integer_list>
 <integer_list> INTEGER_LITERAL
+<integer_list> EPSILON
 <assignment_list> <assignment> <assignment_list>
 <assignment_list> <assignment>
 <assignment> <assign_var> EQUAL_SIGN <expression> SEMICOLON
