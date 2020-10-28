@@ -6,7 +6,7 @@ program ()
   R1 [ 5 ] : size 2 : values { 22 19 ; 75 33 }
   R1 [ 6 ] : size 2 : values { 22 313 ; 745 323 }
   R1 [ 7 ] : size 2 : values { 21 22 ; 745 222 222 }
-  R1 [ 8 ] : size 2 : values { 22 111 111 ; 74 111 ; 34 454 ; 45 22 95 44 }
+  R1 [ 8 ] : size 2 : values { 22 111 111 ; 74 111 }
   declare list of variables ab cd ef : jagged array [ 3 .. 8 ] [ ] of integer ;
   R1 [ 3 ] : size 3 : values { 20 ; 35 ; 54 }
   R1 [ 4 ] : size 6 : values { 65 ; 89 ; 99 ; 11 ; 37 ; 11 }
@@ -18,4 +18,5 @@ program ()
   declare a : boolean ;
   declare list of variables u v : array [ 0 .. 1 ] [ 3 .. 6 ] of integer ;
   new = d * e2 + w + 76875 ;
+  ab [ 4 9 ] = s4 [ 3 2 4 ] + e2 ;
 }

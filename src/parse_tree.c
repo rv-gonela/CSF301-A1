@@ -651,7 +651,7 @@ void validateArrayId(ParseTreeNode* array_node, TypeExpressionTable* E)
             printf("Statement type: Assignment\n");
             printf("Operator: Index access\n");
             printf("Depth: %zu\n",index_node->left_child->depth);
-            printf("Index access in dimension %d must be between 0 and %d\n",dim_index+1,lhs_record.type_expression.array.j.range_R2[first_dim-low].length);
+            printf("Index access in dimension %d must be between 0 and %d\n",dim_index+1,lhs_record.type_expression.array.j.range_R2[first_dim-low].length-1);
           }
         }
         else
@@ -674,7 +674,7 @@ void validateArrayId(ParseTreeNode* array_node, TypeExpressionTable* E)
             printf("Statement type: Assignment\n");
             printf("Operator: Index access\n");
             printf("Depth: %zu\n",index_node->left_child->depth);
-            printf("Index access in dimension %d must be between 0 and %d\n",dim_index+1,lhs_record.type_expression.array.j.range_R2[first_dim-low].ranges[second_dim]);
+            printf("Index access in dimension %d must be between 0 and %d\n",dim_index+1,lhs_record.type_expression.array.j.range_R2[first_dim-low].ranges[second_dim]-1);
           }
         }
 
