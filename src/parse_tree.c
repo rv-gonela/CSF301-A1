@@ -10,14 +10,14 @@ void printError(size_t lno, char* statement_type, char* operator, char* lexeme_1
   if (strcmp(lexeme_1,"---")!=0)
     printTE(type_1);
   else
-    printf("%-15s","---");
-  printf("%-15s ",lexeme_2);
+    printf("%-15s ","---");
+  printf("  %-15s ",lexeme_2);
   if (strcmp(lexeme_2,"---")!=0)
     printTE(type_2);
   else
-    printf("%-15s","---");
-  printf("%-5zu ",depth);
-  printf("%s",message);
+    printf("%-15s ","---");
+  printf("  Depth=%-5zu ",depth);
+  printf("%s\n",message);
 }
 
 // Fills the next level with the grammar rule we are trying
@@ -176,7 +176,7 @@ void recursePrintParseTree(ParseTreeNode* root)
     printRule(root->grammar_rule); // Grammar rule
     printf("%-5zu\n",root->depth); // Depth
   }
-
+  // printf("-------------------------------------------------------------\n");
   // Preorder Traversal
   if(root->left_child != NULL)
     recursePrintParseTree(root->left_child);
@@ -375,7 +375,9 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
               }
               if(jagged_size==NULL)
               {
-                printf("Error: nothing between curly braces\n");
+                //printf("Error: nothing between curly braces\n");
+                printf("**ERROR**\n");
+                printError(jagged_assignment->line_number,"Declaration", "***", "---", declare_type.type_expression, "---", declare_type.type_expression, jagged_assignment->left_child->depth, "3D JA size mismatch : nothing between curly braces");
                 //**TODO: error for nothing between curly braces
               }
               else
@@ -384,17 +386,20 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                 for(int int_list_index=0; int_list_index<temp_size; int_list_index++)
                 {
                   //parsing list_integer_list
-
                   if(strcmp(integer_list->symbol, "SEMICOLON")==0 || (integer_list->right_sibling!=NULL && strcmp(integer_list->right_sibling->symbol, "<list_integer_list>")==0))
                   {
                     if(integer_list->right_sibling!=NULL && strcmp(integer_list->right_sibling->symbol, "<list_integer_list>")==0)
                     {
+                      printf("**ERROR**\n");
+                      printError(integer_list->line_number,"Declaration", "***", "---", declare_type.type_expression, "---", declare_type.type_expression, integer_list->depth, "3D JA size mismatch : empty integer list");
                       declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = 0;
                       break;
                     }
                     declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = 0;
                     //**TODO: error for 3D JA size mismatch
-                    printf("Error: 3D JA mismatch\n");
+                    //printf("Error: 3D JA size mismatch\n");
+                    printf("**ERROR**\n");
+                    printError(integer_list->line_number,"Declaration", "***", "---", declare_type.type_expression, "---", declare_type.type_expression, integer_list->depth, "3D JA size mismatch : empty integer list");
                     if(integer_list->right_sibling !=NULL)
                     {
                       integer_list=integer_list->right_sibling->left_child;
@@ -432,13 +437,17 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                     else if(int_list_index<temp_size-1)
                     {
                       //**TODO: Print error for too less number of integer lists
-                      printf("Error: 3D JA mismatch\n");
+                      //printf("Error: 3D JA size mismatch\n");
+                      printf("**ERROR**\n");
+                      printError(integer_list->line_number,"Declaration", "***", "---", declare_type.type_expression, "---", declare_type.type_expression, integer_list->depth, "3D JA size mismatch : too less integer lists");
                       break;
                     }
                     else if(integer_list->right_sibling != NULL)
                     {
                       //TODO: Error for having too many integer lists.
-                      printf("Error: 3D JA mismatch for too many integer lists\n");
+                      //printf("Error: 3D JA size mismatch for too many integer lists\n");
+                      printf("**ERROR**\n");
+                      printError(integer_list->line_number,"Declaration", "***", "---", declare_type.type_expression, "---", declare_type.type_expression, integer_list->depth, "3D JA size mismatch : too many integer lists");
                     }
                   }
                 }
@@ -476,7 +485,9 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
               }
               if(jagged_size==NULL)
               {
-                printf("Error: nothing between curly braces\n");
+                //printf("Error: nothing between curly braces\n");
+                printf("**ERROR**\n");
+                printError(jagged_assignment->line_number,"Declaration", "***", "---", declare_type.type_expression, "---", declare_type.type_expression, jagged_assignment->left_child->depth, "2D JA size mismatch : nothing between curly braces");
                 //**TODO: error for nothing between curly braces
               }
               else
@@ -489,12 +500,16 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                   {
                     if(integer_list->right_sibling!=NULL && strcmp(integer_list->right_sibling->symbol, "<list_integer_list>")==0)
                     {
+                      printf("**ERROR**\n");
+                      printError(integer_list->line_number,"Declaration", "***", "---", declare_type.type_expression, "---", declare_type.type_expression, integer_list->depth, "2D JA size mismatch : empty integer list");
                       declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = 0;
                       break;
                     }
                     declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = 0;
                     //**TODO: error for 2D JA size mismatch
-                    printf("Error: 2D JA mismatch\n");
+                    //printf("Error: 2D JA size mismatch\n");
+                    printf("**ERROR**\n");
+                    printError(integer_list->line_number,"Declaration", "***", "---", declare_type.type_expression, "---", declare_type.type_expression, integer_list->depth, "2D JA size mismatch : empty integer list");
                     if(integer_list->right_sibling !=NULL)
                     {
                       integer_list=integer_list->right_sibling->left_child;
@@ -525,7 +540,9 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                     if(temp_count>1)
                     {
                       //TODO: type definition error for 2D jagged array
-                      printf("Error: Type definition error for 2D jagged array.\n");
+                      //printf("Error: Type definition error for 2D jagged array.\n");
+                      printf("**ERROR**\n");
+                      printError(integer->line_number,"Declaration", "***", "---", declare_type.type_expression, "---", declare_type.type_expression, integer->depth, "Type definition error for 2D jagged array");
                     }
                     declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = 1;
 
@@ -536,13 +553,17 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                     else if(int_list_index<temp_size-1)
                     {
                       //**TODO: Print error for too less number of integer lists
-                      printf("Error: 2D JA mismatch\n");
+                      //printf("Error: 2D JA size mismatch\n");
+                      printf("**ERROR**\n");
+                      printError(integer_list->line_number,"Declaration", "***", "---", declare_type.type_expression, "---", declare_type.type_expression, integer_list->depth, "2D JA size mismatch : too less integer lists");
                       break;
                     }
                     else if(integer_list->right_sibling != NULL)
                     {
                       //TODO: Error for having too many integer lists.
-                      printf("Error: 2D JA mismatch for too many integer lists\n");
+                      //printf("Error: 2D JA size mismatch for too many integer lists\n");
+                      printf("**ERROR**\n");
+                      printError(integer_list->line_number,"Declaration", "***", "---", declare_type.type_expression, "---", declare_type.type_expression, integer_list->depth, "2D JA size mismatch : too many integer lists");
                     }
                   }
                 }

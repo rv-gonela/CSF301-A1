@@ -31,9 +31,9 @@ void printTypeExpressionTable(TypeExpressionTable Te){
         {
           for(int dim = 0; dim < count-1; dim++)
           {
-            printf("%d, ", j.range_R2[dim].length);
+            printf("%d,", j.range_R2[dim].length);
           }
-          printf("%d), ", j.range_R2[count-1].length);
+          printf("%d),", j.range_R2[count-1].length);
         }
         else
         {
