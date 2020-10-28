@@ -427,11 +427,11 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
               temp_size=strtol(jagged_size->lexeme,NULL,10);
               declare_type.type_expression.array.j.range_R2[range_r2_item_index].length=temp_size;
               declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges=(int*)malloc(sizeof(int)*temp_size);
-              while(jagged_size->symbol!=NULL && strcmp(jagged_size->symbol,"<list_integer_list>")!=0)
+              while(jagged_size!=NULL && strcmp(jagged_size->symbol,"<list_integer_list>")!=0)
               {
                 jagged_size=jagged_size->right_sibling; //**pointing to list_integer_list in rhs of jagged_assignment**
               }
-              if(jagged_size->symbol==NULL)
+              if(jagged_size==NULL)
               {
                 printf("Error: nothing between curly braces\n");
                 //**TODO: error for nothing between curly braces
