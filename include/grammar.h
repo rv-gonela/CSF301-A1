@@ -30,7 +30,7 @@ struct SymbolNode {
  */
 typedef struct {
   SymbolNode** grammar_lhs;
-  int rule_count;
+  size_t rule_count;
 } Grammar;
 
 /* 
@@ -40,5 +40,7 @@ typedef struct {
  * G: THe grammar to populate
  */
 void readGrammar(char* file_name, Grammar* G);
+
+void printRule(SymbolNode* head);
 
 #endif

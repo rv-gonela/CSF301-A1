@@ -3,8 +3,8 @@
 void tokenizeSourceCode(char* file_name, TokenStream* s)
 {
   FILE *fptr = fopen(file_name,"r"); // File stream
-  char line_buffer[100]; // Buffer for reading lines
-  char lexeme_buffer[100]; // Buffer for reading lexemes
+  char line_buffer[500]; // Buffer for reading lines
+  char lexeme_buffer[500]; // Buffer for reading lexemes
   size_t lexeme_buffer_size = 0; // Lexeme buffer size
   s->head = (TokenStreamNode*) malloc(sizeof(TokenStreamNode));
   TokenStreamNode* head = s->head; // Current head of the linked list being built
@@ -20,7 +20,7 @@ void tokenizeSourceCode(char* file_name, TokenStream* s)
   // Read entire file.
   while(fgets(line_buffer,sizeof(line_buffer), fptr) != NULL)
   {
-    for (size_t i = 0; i < 100; i++)
+    for (size_t i = 0; i < 500; i++)
     {
       if (line_buffer[i]=='\n'|| line_buffer[i]==' ') // Line end
       {
