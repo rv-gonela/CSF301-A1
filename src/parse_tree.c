@@ -387,23 +387,22 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
 
                     declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = temp_count;
 
-                    if(integer_list->right_sibling != NULL)
+                    if(integer_list->right_sibling != NULL && int_list_index<temp_size-1)
                     {
                       integer_list = integer_list-> right_sibling->right_sibling->left_child;
                     }
                     else if(int_list_index<temp_size-1)
                     {
-                      printf("Error: 3D JA mismatch\n");
                       //**TODO: Print error for too less number of integer lists
+                      printf("Error: 3D JA mismatch\n");
                       break;
                     }
+                    else if(integer_list->right_sibling != NULL)
+                    {
+                      //TODO: Error for having too many integer lists.
+                      printf("Error: 3D JA mismatch for too many integer lists\n");
+                    }
                   }
-
-                }
-                if(integer_list->right_sibling !=NULL)
-                {
-                  printf("Error: 3D JA mismatch\n");
-                  //TODO: Error for having too many integer lists.
                 }
               }
               range_r2_item_index++;
@@ -492,7 +491,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                     }
                     declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = 1;
 
-                    if(integer_list->right_sibling != NULL)
+                    if(integer_list->right_sibling != NULL && int_list_index<temp_size-1)
                     {
                       integer_list = integer_list-> right_sibling->right_sibling->left_child;
                     }
@@ -502,13 +501,12 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                       printf("Error: 2D JA mismatch\n");
                       break;
                     }
+                    else if(integer_list->right_sibling != NULL)
+                    {
+                      //TODO: Error for having too many integer lists.
+                      printf("Error: 2D JA mismatch for too many integer lists\n");
+                    }
                   }
-
-                }
-                if(integer_list->right_sibling !=NULL)
-                {
-                  //TODO: Error for having too many integer lists.
-                  printf("Error: 2D JA mismatch\n");
                 }
               }
               range_r2_item_index++;
