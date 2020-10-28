@@ -56,6 +56,8 @@ enum Token lexemeType(char* lexeme)
     return TOKEN_SIZE;
   if(strcmp(lexeme,"values")==0)
     return TOKEN_VALUES;
+  if (strcmp(lexeme,"R1")==0)
+    return TOKEN_R1;
   
   for (size_t i = 0; i < strlen(lexeme); i++)
   {
@@ -66,4 +68,4 @@ enum Token lexemeType(char* lexeme)
   return TOKEN_INTEGER_LITERAL; // If it is not any of these, it must be an integer literal
 }
 
-const char* tokenToSymbolMap[30] = {"PROGRAM", "PAR", "CURLY_OPEN", "CURLY_CLOSE", "DECLARE", "COLON", "SEMICOLON", "INTEGER", "REAL", "BOOL", "LIST", "OF", "VARIABLES", "RECT_OPEN", "RECT_CLOSE", "DOUBLE_PERIOD", "JAGGED", "ARRAY", "EQUAL_SIGN", "PLUS", "MINUS", "DIVIDE", "MULTIPLY", "AND", "OR", "VAR_ID", "INTEGER_LITERAL", "SIZE", "VALUES", "NONE"};
+const char* tokenToSymbolMap[31] = {"PROGRAM", "PAR", "CURLY_OPEN", "CURLY_CLOSE", "DECLARE", "COLON", "SEMICOLON", "INTEGER", "REAL", "BOOL", "LIST", "OF", "VARIABLES", "RECT_OPEN", "RECT_CLOSE", "DOUBLE_PERIOD", "JAGGED", "ARRAY", "EQUAL_SIGN", "PLUS", "MINUS", "DIVIDE", "MULTIPLY", "AND", "OR", "VAR_ID", "INTEGER_LITERAL", "SIZE", "VALUES", "R1", "NONE"};
