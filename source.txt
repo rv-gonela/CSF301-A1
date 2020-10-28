@@ -8,5 +8,6 @@ program ()
   R1 [ 7 ] : size 2 : values { 21 22 ; 745 222 222 }
   R1 [ 8 ] : size 2 : values { 22 111 111 ; 74 111 }
   declare list of variables new d w e2 : integer ;
+  declare list of variables u v : array [ 2 .. 5 ] [ 3 .. 6 ] of integer ;
   new = d * e2 + w + 76875 ;
 }

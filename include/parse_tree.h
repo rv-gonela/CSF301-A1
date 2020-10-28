@@ -4,7 +4,6 @@
 #include "token.h"
 #include "token_stream.h"
 #include "grammar.h"
-#include "stack.h"
 #include "type_expression.h"
 #include "type_expression_table.h"
 
@@ -26,14 +25,14 @@ struct ParseTreeNode{
   // Stuff a leaf node needs
   char* lexeme;
   size_t line_number;
-  
+
   // Stuff a non leaf node needs
   TypeExpression type_expression;
   SymbolNode* grammar_rule;
   char* symbol;
 };
 
-/* 
+/*
  * Struct containing the entire parse tree
  */
 typedef struct{
