@@ -33,7 +33,7 @@ void printTypeExpressionTable(TypeExpressionTable Te){
           {
             printf("%d, ", j.range_R2[dim].length);
           }
-          printf("%d", j.range_R2[count-1].length);
+          printf("%d), ", j.range_R2[count-1].length);
         }
         else
         {
