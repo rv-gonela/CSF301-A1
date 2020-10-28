@@ -81,9 +81,15 @@ void readGrammar(char* file_name, Grammar* G)
 
 void printRule(SymbolNode* head)
 {
+  char pretty_rule[200] = "";
+  strcat(pretty_rule,head->symbol);
+  strcat(pretty_rule," -> ");
+  head = head->next;
   while(head != NULL)
   {
-    printf("%s ",head->symbol);
+    strcat(pretty_rule,head->symbol);
+    strcat(pretty_rule," ");
     head= head->next;
   }
+  printf("%-140s",pretty_rule);
 }

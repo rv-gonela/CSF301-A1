@@ -28,6 +28,7 @@ struct ParseTreeNode{
 
   // Stuff a non leaf node needs
   TypeExpression type_expression;
+  int type_expression_exists;
   SymbolNode* grammar_rule;
   char* symbol;
 };
@@ -55,6 +56,11 @@ void printParseTree(ParseTree* t);
  * Traverses the parse tree and populates the type expression table
  */
 void traverseParseTree(ParseTree* t, TypeExpressionTable* E);
+
+/*
+ * Free the memory from the parse tree
+ */
+void freeParseTree(ParseTree* t);
 
 
 #endif

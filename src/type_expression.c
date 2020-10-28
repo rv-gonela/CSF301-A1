@@ -58,6 +58,52 @@ int isTEEqual(TypeExpression a, TypeExpression b)
   return 1;
 }
 
+// Print the type expression
 void printTE(TypeExpression a)
 {
+  printf("<type = ");
+  printf("%s",type_map[a.t]);
+  if (a.t==TYPE_RECTANGULAR_ARRAY)
+  {
+    printf(", dimensions=%d",a.array.r.dimension_count);
+    for (int dim = 1; dim <= a.array.r.dimension_count; dim++)
+      printf(" range_R%d=(%d,%d)", dim, a.array.r.lows[dim-1], a.array.r.highs[dim-1]);
+    printf(" basicElementType = integer");
+  }
+  if (a.t==TYPE_JAGGED_ARRAY)
+  {
+    JaggedArray j=a.array.j;
+    printf(", dimensions=%d, ", j.dimension_count);
+    printf("range_R1=(%d,%d), ", j.range_R1[0], j.range_R1[1]);
+    int count=j.range_R1[1] - j.range_R1[0] + 1;
+    printf("range_R2=(");
+    if(j.dimension_count==2)
+    {
+      for(int dim = 0; dim < count-1; dim++)
+      {
+        printf("%d, ", j.range_R2[dim].length);
+      }
+      printf("%d), ", j.range_R2[count-1].length);
+    }
+    else
+    {
+      for(int dim = 0; dim < count-1; dim++)
+      {
+        printf("%d[", j.range_R2[dim].length);
+        for(int dim2=0; dim2 < j.range_R2[dim].length-1; dim2++)
+        {
+          printf("%d,", j.range_R2[dim].ranges[dim2]);
+        }
+        printf("%d], ", j.range_R2[dim].ranges[j.range_R2[dim].length-1]);
+      }
+      printf("%d[", j.range_R2[count-1].length);
+      for(int dim2=0; dim2 < j.range_R2[count-1].length-1; dim2++)
+      {
+        printf("%d,", j.range_R2[count-1].ranges[dim2]);
+      }
+      printf("%d]),", j.range_R2[count-1].ranges[j.range_R2[count-1].length-1]);
+    }
+    printf(" basicElementType = integer");
+  }
+  printf(">");
 }

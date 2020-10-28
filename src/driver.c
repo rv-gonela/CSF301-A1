@@ -47,7 +47,12 @@ int main()
     else if (option==3)
     {
       ParseTree* t = (ParseTree*)malloc(sizeof(ParseTree));
+      TypeExpressionTable* E = malloc(sizeof(TypeExpressionTable));
+      E->capacity = 8;
+      E->size = 0;
+      E->T = malloc(E->capacity * sizeof(TypeExpressionRecord));
       createParseTree(t,s,G);
+      traverseParseTree(t,E);
       printParseTree(t);
 
       // Prepare for next call
