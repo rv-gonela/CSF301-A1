@@ -39,7 +39,7 @@ int fillParseTree(ParseTreeNode* root, TokenStreamNode** head, Grammar* G)
   TokenStreamNode* savedHead = *head; // Save the head to revert if things go wrong
 
   // If it is a terminal, make sure it matches the token!
-  if (symbol[0]!='<' && strcmp(symbol,"EPSILON")!=0)
+  if (symbol[0]!='<')
   {
     if (strcmp(tokenToSymbolMap[(*head)->token_type],symbol)==0)
     {
@@ -52,10 +52,6 @@ int fillParseTree(ParseTreeNode* root, TokenStreamNode** head, Grammar* G)
     }
     else
       works = 0;
-  }
-  else if (strcmp(symbol,"EPSILON")==0)
-  {
-    works = 0;
   }
   else
   {
@@ -532,7 +528,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
               E->T = realloc(E->T,E->capacity*sizeof(TypeExpressionRecord));
             }
           }
-          else if (strcmp(head->left_child->symbol,"<var_list>"))
+          else if (strcmp(head->left_child->symbol,"<var_list>")==0)
           {
             // List of variables
             ParseTreeNode* var_list_node = head->left_child->left_child;
@@ -540,6 +536,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
             {
               if(strcmp(var_list_node->symbol,"<var_id_list>")==0)
                 break;
+              var_list_node = var_list_node->right_sibling;
             }
             while(var_list_node != NULL)
             {
