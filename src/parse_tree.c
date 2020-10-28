@@ -878,3 +878,20 @@ void traverseParseTree(ParseTree* t, TypeExpressionTable* E)
   ParseTreeNode* assignmentRoot = declarationRoot->right_sibling;
   validateParseTree(assignmentRoot,E);
 }
+
+void recurseFreeParseTree(ParseTreeNode* root)
+{
+  if (root->right_sibling != NULL)
+    recurseFreeParseTree(root->right_sibling);
+  if (root->left_child != NULL)
+    recurseFreeParseTree(root->left_child);
+  free(root);
+}
+
+void freeParseTree(ParseTree* t)
+{
+  ParseTreeNode* root = t->root;
+  recurseFreeParseTree(root);
+  free(t);
+}
+
