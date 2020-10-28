@@ -331,14 +331,14 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
               temp_size=strtol(jagged_size->lexeme,NULL,10);
               declare_type.type_expression.array.j.range_R2[range_r2_item_index].length=temp_size;
               declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges=(int*)malloc(sizeof(int)*temp_size);
-              while(jagged_size->symbol!=NULL && strcmp(jagged_size->symbol,"<list_integer_list>")!=0)
+              while(jagged_size!=NULL && strcmp(jagged_size->symbol,"<list_integer_list>")!=0)
               {
                 jagged_size=jagged_size->right_sibling; //**pointing to list_integer_list in rhs of jagged_assignment**
               }
-              if(jagged_size->symbol==NULL)
+              if(jagged_size==NULL)
               {
-                //**TODO: error for nothing between curly braces
                 printf("Error: nothing between curly braces\n");
+                //**TODO: error for nothing between curly braces
               }
               else
               {
@@ -347,10 +347,16 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                 {
                   //parsing list_integer_list
 
-                  if(strcmp(integer_list->symbol, "SEMICOLON")==0)
+                  if(strcmp(integer_list->symbol, "SEMICOLON")==0 || (integer_list->right_sibling!=NULL && strcmp(integer_list->right_sibling->symbol, "<list_integer_list>")==0))
                   {
+                    if(integer_list->right_sibling!=NULL && strcmp(integer_list->right_sibling->symbol, "<list_integer_list>")==0)
+                    {
+                      declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = 0;
+                      break;
+                    }
                     declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = 0;
                     //**TODO: error for 3D JA size mismatch
+                    printf("Error: 3D JA mismatch\n");
                     if(integer_list->right_sibling !=NULL)
                     {
                       integer_list=integer_list->right_sibling->left_child;
@@ -387,7 +393,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                     }
                     else if(int_list_index<temp_size-1)
                     {
-                      printf("Error: too less number of integer lists\n");
+                      printf("Error: 3D JA mismatch\n");
                       //**TODO: Print error for too less number of integer lists
                       break;
                     }
@@ -396,7 +402,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                 }
                 if(integer_list->right_sibling !=NULL)
                 {
-                  printf("Error: too many integer lists\n");
+                  printf("Error: 3D JA mismatch\n");
                   //TODO: Error for having too many integer lists.
                 }
               }
@@ -442,11 +448,16 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                 for(int int_list_index=0; int_list_index<temp_size; int_list_index++)
                 {
                   //parsing list_integer_list
-
-                  if(strcmp(integer_list->symbol, "SEMICOLON")==0)
+                  if(strcmp(integer_list->symbol, "SEMICOLON")==0 || (integer_list->right_sibling!=NULL && strcmp(integer_list->right_sibling->symbol, "<list_integer_list>")==0))
                   {
+                    if(integer_list->right_sibling!=NULL && strcmp(integer_list->right_sibling->symbol, "<list_integer_list>")==0)
+                    {
+                      declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = 0;
+                      break;
+                    }
                     declare_type.type_expression.array.j.range_R2[range_r2_item_index].ranges[int_list_index] = 0;
                     //**TODO: error for 2D JA size mismatch
+                    printf("Error: 2D JA mismatch\n");
                     if(integer_list->right_sibling !=NULL)
                     {
                       integer_list=integer_list->right_sibling->left_child;
@@ -488,7 +499,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                     else if(int_list_index<temp_size-1)
                     {
                       //**TODO: Print error for too less number of integer lists
-                      printf("Error: too less number of integer lists\n");
+                      printf("Error: 2D JA mismatch\n");
                       break;
                     }
                   }
@@ -497,7 +508,7 @@ void populateExpTable(ParseTreeNode* root, TypeExpressionTable* E)
                 if(integer_list->right_sibling !=NULL)
                 {
                   //TODO: Error for having too many integer lists.
-                  printf("Error: too less number of integer lists\n");
+                  printf("Error: 2D JA mismatch\n");
                 }
               }
               range_r2_item_index++;
@@ -894,4 +905,3 @@ void freeParseTree(ParseTree* t)
   recurseFreeParseTree(root);
   free(t);
 }
-
