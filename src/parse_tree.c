@@ -702,8 +702,8 @@ void validateExpression(ParseTreeNode* expression_root, TypeExpressionTable* E)
   // 3. Divide gives a real
   if(strcmp(expression_root->symbol,"<arr_id>")==0)
   {
-    expression_root->type_expression = getTypeExpressionRecord(E,expression_root->left_child->lexeme).type_expression;
     validateArrayId(expression_root,E);
+    expression_root->type_expression.t = TYPE_INTEGER;
   }
   else if (strcmp(expression_root->symbol,"INTEGER_LITERAL")==0)
   {
@@ -832,7 +832,7 @@ void validateParseTree(ParseTreeNode* root, TypeExpressionTable* E)
       {
         // This is an array **weep**
         ParseTreeNode* array_node = assignment_node->left_child;
-        lhs_record = getTypeExpressionRecord(E,array_node->left_child->lexeme);
+        lhs_record.type_expression.t = TYPE_INTEGER;
         array_node->type_expression = lhs_record.type_expression;
         validateArrayId(array_node,E);
       }
