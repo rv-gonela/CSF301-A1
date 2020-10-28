@@ -36,6 +36,7 @@ enum Token {
   TOKEN_INTEGER_LITERAL,
   TOKEN_SIZE,
   TOKEN_VALUES,
+  TOKEN_R1,
   TOKEN_NONE
 };
 
@@ -46,6 +47,6 @@ enum Token {
  */
 enum Token lexemeType(char* lexeme);
 
-extern const char* tokenToSymbolMap[30];
+extern const char* tokenToSymbolMap[31];
 
 #endif
